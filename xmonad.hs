@@ -9,7 +9,7 @@ import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO ()
 import XMonad
   ( Choose, KeyMask, KeySym, Layout, LayoutMessages(ReleaseResources), Query, WindowSet, X, XConfig(XConfig), (<+>), (-->), (=?), borderWidth
-  , broadcastMessage, className, composeAll, focusedBorderColor, focusFollowsMouse, handleEventHook, io, keys, kill, layoutHook, manageHook, mod1Mask, mod4Mask
+  , broadcastMessage, className, composeAll, doShift, focusedBorderColor, focusFollowsMouse, handleEventHook, io, keys, kill, layoutHook, manageHook, modMask, mod4Mask
   , normalBorderColor, restart, sendMessage, setLayout, shiftMask, spawn, startupHook, stringProperty, terminal, windows, withFocused, workspaces
   , xmonad
   )
@@ -25,6 +25,7 @@ import qualified XMonad.Layout.Decoration as D
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.Maximize (Maximize, maximize, maximizeRestore)
 import XMonad.Layout.NoBorders (SmartBorder, smartBorders)
+import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.ResizableTile (ResizableTall(ResizableTall), MirrorResize(MirrorExpand, MirrorExpand, MirrorShrink))
 import XMonad.Layout.Simplest (Simplest(Simplest))
 import XMonad.Layout.Spacing (Border(Border), Spacing, spacingRaw, toggleWindowSpacingEnabled)
@@ -38,24 +39,39 @@ import XMonad.Prompt.XMonad (xmonadPrompt)
 import qualified XMonad.StackSet as StackSet
 import XMonad.Util.SpawnOnce (spawnOnce)
 
+
 myTerminal :: String
 myTerminal = "kitty"
+
+codeWS, referenceWS, commsWS, officeWS :: String
+codeWS = "Code"
+referenceWS = "Reference"
+commsWS = "Comms"
+officeWS = "Office"
+myWorkspaces :: [String]
+myWorkspaces = [codeWS, referenceWS, commsWS, officeWS]
 
 gaps :: l a -> ModifiedLayout Spacing l a
 gaps = spacingRaw True (Border 0 0 0 0) False (Border 4 4 4 4) False -- gaps (border / window spacing)
 
+-- To find the property name associated with a program, use
+-- > xprop | grep WM_CLASS
 myManageHook :: Query (Endo WindowSet)
 myManageHook = composeAll . concat $
-  -- [ [className =? "qutebrowser" --> doShift "Qutebrowser"]
-  -- , [className =? "Spotify" --> doShift "Media"]
-  -- , [className =? "Firefox" --> doShift "Firefox"]
-  -- , [className =? "Chromium" --> doShift "Chrome"]
-  [ [className =? c --> doRectFloat (StackSet.RationalRect 0.3 0.3 0.4 0.4) | c <- floatsClass]
+  [ [className =? "Slack" --> doShift commsWS]
+  , [className =? "Sublime_merge" --> doShift referenceWS]
+  -- , [className =? "zoom" --> doShift commsWS] --not sure if this is the right class name yet
+  , [className =? c --> doRectFloat (StackSet.RationalRect 0.3 0.3 0.4 0.4) | c <- floatsClass]
   , [wmName =? "sxiv" -->  doRectFloat (StackSet.RationalRect 0.3 0.3 0.4 0.4)] 
   ]
   where
     wmName = stringProperty "WM_NAME"
     floatsClass = []
+
+-- runs whenever XMonad is started (or restarted)
+myStartupHook :: X ()
+myStartupHook = do
+  spawnOnce "polybar main"
 
 myNewManageHook :: Query (Endo WindowSet)
 myNewManageHook = composeAll
@@ -67,58 +83,52 @@ myNewManageHook = composeAll
 
 promptConfig :: XPConfig
 promptConfig = def
-  { Prompt.font = "xft:Fira Code Retina:size=8"
+  { Prompt.font = "xft:Fira Code Retina:size=10"
   , Prompt.height = 40
   , Prompt.searchPredicate = fuzzyMatch
   -- , Prompt.sorter = fuzzySort
   }
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@(XConfig { }) = M.fromList $
-  [ ((mod1Mask              , XMonad.xK_Return), spawn myTerminal)
-  , ((mod1Mask              , XMonad.xK_p     ), ShellPrompt.prompt (XMonad.terminal conf) promptConfig)
-  , ((mod1Mask              , XMonad.xK_c     ), xmonadPrompt promptConfig)
-  , ((mod1Mask              , XMonad.xK_w     ), windowMultiPrompt promptConfig [(Goto, allWindows), (Goto, wsWindows)])
-  , ((mod1Mask .|. shiftMask, XMonad.xK_w     ), windowMultiPrompt promptConfig [(Bring, allWindows), (Bring, wsWindows)])
-  , ((mod1Mask              , XMonad.xK_Tab   ), nextWS)
-  , ((mod1Mask .|. shiftMask, XMonad.xK_Tab   ), prevWS)
-  , ((mod1Mask              , XMonad.xK_j     ), windows StackSet.focusDown) -- %! Move focus to the next window
-  , ((mod1Mask              , XMonad.xK_k     ), windows StackSet.focusUp)
-  , ((mod1Mask              , XMonad.xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
-  , ((mod1Mask              , XMonad.xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
-  , ((mod1Mask              , XMonad.xK_space ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
-  , ((mod1Mask .|. shiftMask, XMonad.xK_space ), setLayout $ layoutHook conf) -- %!  Reset the layouts on the current workspace to default
-  , ((mod4Mask              , XMonad.xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
-  , ((mod4Mask              , XMonad.xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
-  , ((mod4Mask              , XMonad.xK_t     ), withFocused $ windows . StackSet.sink) -- %! Push window back into tiling
-  , ((mod4Mask              , XMonad.xK_h     ), sendMessage Shrink) -- %! Shrink the master area
-  , ((mod4Mask              , XMonad.xK_l     ), sendMessage Expand) -- %! Expand the master area
-  , ((mod4Mask              , XMonad.xK_m     ), windows StackSet.swapMaster) -- %! Swap the focused window and the master window
-  , ((mod4Mask .|. shiftMask, XMonad.xK_j     ), windows StackSet.swapDown) -- %! Swap the focused window with the next window
-  , ((mod4Mask .|. shiftMask, XMonad.xK_k     ), windows StackSet.swapUp) -- %! Swap the focused window with the previous window
-   -- , ((mod4Mask              , XMonad.xK_m     ), windows StackSet.focusMaster  ) -- %! Move focus to the master window
-  , ((mod4Mask .|. shiftMask, XMonad.xK_c     ), kill) -- %! Close the focused window
-  , ((mod1Mask .|. shiftMask, XMonad.xK_q     ), io (exitWith ExitSuccess)) -- Quit xmonad.
-  , ((mod1Mask .|. shiftMask, XMonad.xK_r     ), broadcastMessage ReleaseResources >> restart "xmonad" True) -- %! Restart xmonad
-  , ((mod1Mask .|. shiftMask, XMonad.xK_x     ), spawn "p=$(pidof polybar) && kill $p; polybar main")
-  , ((mod1Mask              , XMonad.xK_f     ), withFocused (sendMessage . maximizeRestore))
-  , ((mod1Mask              , XMonad.xK_z     ), sendMessage MirrorShrink)
-  , ((mod1Mask              , XMonad.xK_a     ), sendMessage MirrorExpand)
-  , ((mod1Mask              , XMonad.xK_e     ), toggleFloatNext)
-  , ((mod1Mask .|. shiftMask, XMonad.xK_e     ), toggleFloatAllNew)
-  , ((mod1Mask              , XMonad.xK_b     ), sendMessage ToggleStruts) -- toggle fullscreen (really just lower status bar below everything)
-  , ((mod1Mask              , XMonad.xK_g     ), toggleWindowSpacingEnabled)
-  -- floating window keys
-  -- , ((mod1Mask, XMonad.xK_equal), withFocused (keysMoveWindow (0, -30)))
-  -- , ((mod1Mask, XMonad.xK_apostrophe), withFocused (keysMoveWindow (0, 30)))
-  -- , ((mod1Mask, XMonad.xK_bracketright), withFocused (keysMoveWindow (30, 0)))
-  -- , ((mod1Mask, XMonad.xK_bracketleft), withFocused (keysMoveWindow (-30, 0)))
-  -- , ((controlMask .|. shiftMask, XMonad.xK_m), withFocused $ keysResizeWindow (0, -15) (0, 0))
-  -- , ((controlMask .|. shiftMask, XMonad.xK_comma), withFocused $ keysResizeWindow (0, 15) (0, 0))
+myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
+  [ ((modm .|. shiftMask, XMonad.xK_Return), spawn myTerminal)
+  , ((modm              , XMonad.xK_p     ), ShellPrompt.prompt (XMonad.terminal conf) promptConfig)
+  -- , ((modm              , XMonad.xK_c     ), xmonadPrompt promptConfig)
+  -- , ((modm              , XMonad.xK_w     ), windowMultiPrompt promptConfig [(Goto, allWindows), (Goto, wsWindows)])
+  -- , ((modm .|. shiftMask, XMonad.xK_w     ), windowMultiPrompt promptConfig [(Bring, allWindows), (Bring, wsWindows)])
+  , ((modm              , XMonad.xK_Tab   ), nextWS)
+  , ((modm .|. shiftMask, XMonad.xK_Tab   ), prevWS)
+  , ((modm              , XMonad.xK_j     ), windows StackSet.focusDown) -- %! Move focus to the next window
+  , ((modm              , XMonad.xK_k     ), windows StackSet.focusUp)
+  , ((modm              , XMonad.xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
+  , ((modm              , XMonad.xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
+  , ((modm              , XMonad.xK_space ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
+  , ((modm .|. shiftMask, XMonad.xK_space ), setLayout $ layoutHook conf) -- %!  Reset the layouts on the current workspace to default
+  , ((modm              , XMonad.xK_i     ), withFocused $ windows . StackSet.sink) -- %! Push window back into tiling
+  , ((modm              , XMonad.xK_h     ), sendMessage Shrink) -- %! Shrink the master area
+  , ((modm              , XMonad.xK_l     ), sendMessage Expand) -- %! Expand the master area
+  , ((modm              , XMonad.xK_m     ), windows StackSet.swapMaster) -- %! Swap the focused window and the master window
+  , ((modm .|. shiftMask, XMonad.xK_j     ), windows StackSet.swapDown) -- %! Swap the focused window with the next window
+  , ((modm .|. shiftMask, XMonad.xK_k     ), windows StackSet.swapUp) -- %! Swap the focused window with the previous window
+  , ((modm              , XMonad.xK_m     ), windows StackSet.focusMaster  ) -- %! Move focus to the master window
+  , ((modm .|. shiftMask, XMonad.xK_c     ), kill) -- %! Close the focused window
+  , ((modm .|. shiftMask, XMonad.xK_q     ), broadcastMessage ReleaseResources >> restart "xmonad" True) -- %! Restart xmonad
+  , ((modm .|. shiftMask, XMonad.xK_x     ), spawn "p=$(pidof polybar) && kill $p; polybar main")
+  , ((modm              , XMonad.xK_f     ), withFocused (sendMessage . maximizeRestore))
+  , ((modm              , XMonad.xK_z     ), sendMessage MirrorShrink)
+  , ((modm              , XMonad.xK_a     ), sendMessage MirrorExpand)
+  , ((modm              , XMonad.xK_u     ), toggleFloatNext)
+  , ((modm .|. shiftMask, XMonad.xK_u     ), toggleFloatAllNew)
+  , ((modm              , XMonad.xK_b     ), sendMessage ToggleStruts) -- toggle fullscreen (really just lower status bar below everything)
+  , ((modm              , XMonad.xK_g     ), toggleWindowSpacingEnabled)
   ]
-    ++ [ ((m .|. mod1Mask, k), windows $ f i) -- mod-[1..9], Switch to workspace N
+    ++ [ ((m .|. modm, k), windows $ f i) -- mod-[1..9], Switch to workspace N
        | (i, k) <- zip (workspaces conf) [XMonad.xK_1 .. XMonad.xK_9] -- mod-shift-[1..9], Move client to workspace N
        , (f, m) <- [(StackSet.greedyView, 0), (StackSet.shift, shiftMask)]
+       ]
+    ++ [ ((m .|. modm, key), XMonad.screenWorkspace sc >>= flip XMonad.whenJust (windows . f)) -- mod-[w,e,r] switch to screen 1,2,3
+       | (key, sc) <- zip [XMonad.xK_w, XMonad.xK_e, XMonad.xK_r] [0..] -- mod-shift-[w,e,r] move window to screen 1,2,3
+       , (f, m) <- [(StackSet.view, 0), (StackSet.shift, shiftMask)]
        ]
 
 main :: IO ()
@@ -129,21 +139,23 @@ main = do
     , normalBorderColor  = "#606060"
     , focusedBorderColor = "#f0f0f0"
     , focusFollowsMouse  = False
-    -- , modMask            = modMask
+    , modMask            = mod4Mask
     , terminal           = myTerminal
-    , workspaces         = ["Main", "Infra", "3rd"]
+    , workspaces         = myWorkspaces
     , keys               = myKeys
-    , startupHook        = spawnOnce "polybar main"
+    , startupHook        = myStartupHook
     , manageHook         = myNewManageHook <+> manageDocks
     , layoutHook         = avoidStruts
                          . gaps
                          . smartBorders
                          . maximize
-                         $ tabs ||| tiles
+                         . onWorkspace commsWS (tabs ||| tiles)
+                         . onWorkspace referenceWS (tabs ||| tiles)
+                         $ tiles ||| tabs
     }
   where
     tabs = tabBar shrinkText theme Top (resizeVertical (D.fi . D.decoHeight $ theme) Simplest)
-    tiles = ResizableTall 1 (3 / 100) (1 / 2) []
+    tiles = ResizableTall 1 (3 / 100) (0.65) []
     theme = def
       { D.activeColor         = "#f92672"
       , D.activeBorderColor   = "#f92672"
@@ -154,6 +166,6 @@ main = do
       , D.urgentColor         = "#fd971f"
       , D.urgentBorderColor   = "#fd971f"
       , D.urgentTextColor     = "#f8f8f2"
-      , D.decoHeight          = 24
-      , D.fontName            = "xft:Fira Code Retina:size=7"
+      , D.decoHeight          = 28
+      , D.fontName            = "xft:Fira Code Retina:size=9"
       }
