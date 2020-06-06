@@ -37,7 +37,7 @@ import qualified XMonad.Prompt.Shell as ShellPrompt
 import XMonad.Prompt.Window (WindowPrompt(Goto, Bring), windowMultiPrompt, allWindows, wsWindows)
 import XMonad.Prompt.XMonad (xmonadPrompt)
 import qualified XMonad.StackSet as StackSet
-import XMonad.Util.SpawnOnce (spawnOnce)
+import XMonad.Util.SpawnOnce (spawnOnce, spawnOnOnce)
 
 
 myTerminal :: String
@@ -60,7 +60,7 @@ myManageHook :: Query (Endo WindowSet)
 myManageHook = composeAll . concat $
   [ [className =? "Slack" --> doShift commsWS]
   , [className =? "Sublime_merge" --> doShift referenceWS]
-  -- , [className =? "zoom" --> doShift commsWS] --not sure if this is the right class name yet
+  , [className =? "zoom" --> doShift commsWS]
   , [className =? c --> doRectFloat (StackSet.RationalRect 0.3 0.3 0.4 0.4) | c <- floatsClass]
   , [wmName =? "sxiv" -->  doRectFloat (StackSet.RationalRect 0.3 0.3 0.4 0.4)] 
   ]
@@ -72,27 +72,30 @@ myManageHook = composeAll . concat $
 myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "polybar main"
+  spawnOnOnce commsWS "slack"
+  spawnOnOnce referenceWS "firefox"
+  spawnOnOnce codeWS myTerminal
 
 myNewManageHook :: Query (Endo WindowSet)
 myNewManageHook = composeAll
   [ myManageHook
   , floatNextHook
   , manageHook desktopConfig
-  -- , namedScratchpadManageHook scratchpads
   ]
 
-promptConfig :: XPConfig
-promptConfig = def
-  { Prompt.font = "xft:Fira Code Retina:size=10"
-  , Prompt.height = 40
-  , Prompt.searchPredicate = fuzzyMatch
-  -- , Prompt.sorter = fuzzySort
-  }
+data ScrotSource = ScrotSelection | ScrotWindow
+data ScrotTarget = ScrotFile | ScrotClipboard
+--TODO make a notification for each of these
+scrot :: ScrotSource -> ScrotTarget -> X ()
+scrot ScrotSelection ScrotClipboard = spawn "SCROT_PATH=$(date +\"/tmp/scrot-shot%Y-%m-%dT%H-%M-%S.png\") bash -c 'sleep 0.2 && scrot --line style=dash,width=3 --select $SCROT_PATH && xclip -selection clipboard -target image/png $SCROT_PATH'"
+scrot ScrotWindow    ScrotClipboard = spawn "SCROT_PATH=$(date +\"/tmp/scrot-shot%Y-%m-%dT%H-%M-%S.png\") bash -c 'scrot -u $SCROT_PATH && xclip -selection clipboard -target image/png $SCROT_PATH'"
+scrot ScrotSelection ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'sleep 0.2 && scrot --line style=dash,width=3 --select $SCROT_PATH'"
+scrot ScrotWindow    ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'scrot -u $SCROT_PATH'"
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
-  [ ((modm .|. shiftMask, XMonad.xK_Return), spawn myTerminal)
-  , ((modm              , XMonad.xK_p     ), ShellPrompt.prompt (XMonad.terminal conf) promptConfig)
+  [ ((modm              , XMonad.xK_Return), spawn myTerminal)
+  , ((modm              , XMonad.xK_p     ), spawn "dmenu_run")
   -- , ((modm              , XMonad.xK_c     ), xmonadPrompt promptConfig)
   -- , ((modm              , XMonad.xK_w     ), windowMultiPrompt promptConfig [(Goto, allWindows), (Goto, wsWindows)])
   -- , ((modm .|. shiftMask, XMonad.xK_w     ), windowMultiPrompt promptConfig [(Bring, allWindows), (Bring, wsWindows)])
@@ -121,6 +124,10 @@ myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
   , ((modm .|. shiftMask, XMonad.xK_u     ), toggleFloatAllNew)
   , ((modm              , XMonad.xK_b     ), sendMessage ToggleStruts) -- toggle fullscreen (really just lower status bar below everything)
   , ((modm              , XMonad.xK_g     ), toggleWindowSpacingEnabled)
+  , ((modm              , XMonad.xK_s     ), scrot ScrotSelection ScrotFile)
+  , ((modm .|. shiftMask, XMonad.xK_s     ), scrot ScrotSelection ScrotClipboard)
+  , ((modm              , XMonad.xK_d     ), scrot ScrotWindow    ScrotFile)
+  , ((modm .|. shiftMask, XMonad.xK_d     ), scrot ScrotWindow    ScrotClipboard)
   ]
     ++ [ ((m .|. modm, k), windows $ f i) -- mod-[1..9], Switch to workspace N
        | (i, k) <- zip (workspaces conf) [XMonad.xK_1 .. XMonad.xK_9] -- mod-shift-[1..9], Move client to workspace N
@@ -155,7 +162,7 @@ main = do
     }
   where
     tabs = tabBar shrinkText theme Top (resizeVertical (D.fi . D.decoHeight $ theme) Simplest)
-    tiles = ResizableTall 1 (3 / 100) (0.65) []
+    tiles = ResizableTall 1 (3 / 100) (0.5) []
     theme = def
       { D.activeColor         = "#f92672"
       , D.activeBorderColor   = "#f92672"

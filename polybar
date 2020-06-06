@@ -37,12 +37,12 @@ line-color = #f00
 padding-left = 0
 padding-right = 2
 module-margin-left = 1
-module-margin-right = 3
+module-margin-right = 1
 font-0 = Fira Code Retina:size=10;1
 font-1 = Font Awesome 5 Free Solid:size=10;3
 modules-left = ewmh
-modules-center = date
-modules-right = xkeyboard memory cpu filesystem
+modules-center = 
+modules-right = memory cpu filesystem battery sep wired-network wireless-network sep backlight audio sep date time-utc
 tray-position = right
 tray-padding = 2
 override-redirect = true
@@ -51,15 +51,13 @@ cursor-scroll = ns-resize
 dpi-x = 226
 dpi-y = 226
 
-[module/xkeyboard]
-type = internal/xkeyboard
-blacklist-0 = num lock
-format-prefix = "%{T1} "
-format-prefix-foreground = ${colors.foreground-alt}
-label-layout = %layout%
-label-indicator-padding = 2
-label-indicator-margin = 1
-label-indicator-background = ${colors.secondary}
+[module/sep]
+type = custom/text
+content = |
+
+[module/headphones]
+type = custom/text
+content = 
 
 [module/filesystem]
 type = internal/fs
@@ -86,7 +84,7 @@ label-song-ellipsis = true
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "%{T1} "
+format-prefix = "%{T1}"
 format-prefix-foreground = ${colors.foreground-alt}
 label = %percentage:2%%
 
@@ -102,11 +100,52 @@ type = internal/date
 interval = 5
 date = " %Y-%m-%d"
 date-alt = " %Y-%m-%d"
-time = "  %H:%M"
+time = "%H:%M"
 time-alt = %H:%M:%S
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 label = %date% %time%
+
+[module/time-utc]
+type = custom/script
+exec = date -u +"%H:%Mutc"
+interval = 5
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+label-charging = "%{T1} %percentage%%"
+label-discharging = "%{T1} %percentage%%"
+label-full = "%{T1} MAX POWAH"
+full-at = 99
+
+[module/wired-network]
+type = internal/network
+interface = enp0s31f6
+label-connected = "eth %local_ip%"
+
+[module/wireless-network]
+type = internal/network
+interface = wlp82s0
+label-connected = "wifi %local_ip%"
+
+[module/audio]
+type = internal/pulseaudio
+format-volume = <ramp-volume> <label-volume>
+format-muted = <label-muted>
+label-volume = "%percentage%%"
+label-muted = "%{T1} muted"
+label-muted-foreground = #666
+ramp-volume-0 = %{T1}
+ramp-volume-1 = %{T1}
+ramp-volume-2 = %{T1}
+click-right = pavucontrol &
+
+[module/backlight]
+type = internal/backlight
+card = intel_backlight
+label = "%{T1} %percentage%%"
 
 [settings]
 screenchange-reload = true
