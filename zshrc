@@ -40,3 +40,5 @@ function nghci
   set -x
   nix-shell -p "haskellPackages.ghcWithPackages (p: with p; [$@])" --run ghci
 }
+
+[ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ] && . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
