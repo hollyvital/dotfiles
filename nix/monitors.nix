@@ -25,7 +25,7 @@
         };
         config = {
           "eDP-1-1" = {
-            crtc = 4
+            crtc = 4;
             enable = true;
             mode = "3840x2160";
             position = "4800x0";
