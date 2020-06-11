@@ -73,6 +73,7 @@ myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "polybar main"
   spawnOnOnce commsWS "slack"
+  spawnOnOnce commsWS "QT_SCALE_FACTOR=2 zoom-us"
   spawnOnOnce referenceWS "firefox"
   spawnOnOnce codeWS myTerminal
 
