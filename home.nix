@@ -12,6 +12,7 @@ in
   imports = [
     /home/asa/git/vital-nix/user/feh-background.nix
     /home/asa/git/vital-nix/user/p53.nix
+    /home/asa/git/vital-nix/user/software-workstation.nix
   ];
 
   home = {
@@ -33,6 +34,7 @@ in
       gimp
       glxinfo
       sublime-merge
+      vimpc
     ];
 
     sessionVariables = {
@@ -45,6 +47,12 @@ in
 
   nixpkgs.config = import ./nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+
+  services = {
+    mpd = {
+      enable = true;
+    };
+  };
 
   programs = {
     home-manager.enable = true;
