@@ -93,6 +93,10 @@ scrot ScrotWindow    ScrotClipboard = spawn "SCROT_PATH=$(date +\"/tmp/scrot-sho
 scrot ScrotSelection ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'sleep 0.2 && scrot --line style=dash,width=3 --select $SCROT_PATH'"
 scrot ScrotWindow    ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'scrot -u $SCROT_PATH'"
 
+brightnessUp, brightnessDown :: X ()
+brightnessUp   = spawn "brightness set \"+3%\""
+brightnessDown = spawn "brightness set \"3%-\""
+
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
   [ ((modm              , XMonad.xK_Return), spawn myTerminal)
