@@ -82,6 +82,34 @@ in
     };
 
     man.enable = true;
+    
+    firefox = {
+      profiles.asa = {
+        settings = {
+          "browser.aboutConfig.showWarning" = false;
+          "browser.bookmarks.editDialog.confirmationHintShowCount" = 3;
+          "browser.bookmarks.restore_default_bookmarks" = false;
+          "browser.contentblocking.category" = "standard";
+          "browser.ctrlTab.recentlyUserOrder" = false;
+          "browser.discovery.enabled" = false;
+          "browser.newtabpage.activity-stream.feeds.section.hightlights" = false;
+          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.newtabpage.activity-stream.feeds.snippets" = false;
+          "browser.newtabpage.activity-stream.feeds.topsites" = false;
+          "browser.search.region" = "US";
+          "browser.search.suggest.enabled" = false;
+          "browser.tabs.loadInBackground" = false;
+          "browser.urlbar.placeholderName" = "DuckDuckGo";
+          "browser.urlbar.placeholderName.private" = "DuckDuckGo";
+          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          "extensions.formautofill.addresses.enabled" = false;
+          "ui.systemUsesDarkTheme"= 1;
+        };
+      };
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        1password-x-password-manager
+      ];
+    };
   };
 
 
@@ -149,3 +177,4 @@ in
     windowManager.command = "${xmonad}/bin/xmonad";
   };
 }
+
