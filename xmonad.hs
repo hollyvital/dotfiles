@@ -4,6 +4,7 @@ import Data.Bits ((.|.))
 import Data.Default (def)
 import qualified Data.Map as M
 import Data.Semigroup (Endo)
+import Graphics.X11.ExtraTypes.XF86 as XF86
 import Graphics.X11.ExtraTypes.XF86 ()
 import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.IO ()
@@ -93,17 +94,13 @@ scrot ScrotWindow    ScrotClipboard = spawn "SCROT_PATH=$(date +\"/tmp/scrot-sho
 scrot ScrotSelection ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'sleep 0.2 && scrot --line style=dash,width=3 --select $SCROT_PATH'"
 scrot ScrotWindow    ScrotFile      = spawn "SCROT_PATH=$(date +\"~/scrot-%Y-%m-%dT%H-%M-%S.png\") bash -c 'scrot -u $SCROT_PATH'"
 
-brightnessUp, brightnessDown :: X ()
-brightnessUp   = spawn "brightness set \"+3%\""
-brightnessDown = spawn "brightness set \"3%-\""
+runInKitty :: String -> X ()
+runInKitty cmd = spawn $ "kitty --hold zsh -c \"" <> cmd <> "\""
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
   [ ((modm              , XMonad.xK_Return), spawn myTerminal)
   , ((modm              , XMonad.xK_p     ), spawn "dmenu_run")
-  -- , ((modm              , XMonad.xK_c     ), xmonadPrompt promptConfig)
-  -- , ((modm              , XMonad.xK_w     ), windowMultiPrompt promptConfig [(Goto, allWindows), (Goto, wsWindows)])
-  -- , ((modm .|. shiftMask, XMonad.xK_w     ), windowMultiPrompt promptConfig [(Bring, allWindows), (Bring, wsWindows)])
   , ((modm              , XMonad.xK_Tab   ), nextWS)
   , ((modm .|. shiftMask, XMonad.xK_Tab   ), prevWS)
   , ((modm              , XMonad.xK_j     ), windows StackSet.focusDown) -- %! Move focus to the next window
@@ -120,6 +117,7 @@ myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
   , ((modm .|. shiftMask, XMonad.xK_k     ), windows StackSet.swapUp) -- %! Swap the focused window with the previous window
   , ((modm              , XMonad.xK_m     ), windows StackSet.focusMaster  ) -- %! Move focus to the master window
   , ((modm .|. shiftMask, XMonad.xK_c     ), kill) -- %! Close the focused window
+  , ((modm .|. shiftMask, XMonad.xK_a     ), runInKitty "home-manager switch && xmonad --recompile")
   , ((modm .|. shiftMask, XMonad.xK_q     ), broadcastMessage ReleaseResources >> restart "xmonad" True) -- %! Restart xmonad
   , ((modm .|. shiftMask, XMonad.xK_x     ), spawn "p=$(pidof polybar) && kill $p; polybar main")
   , ((modm              , XMonad.xK_f     ), withFocused (sendMessage . maximizeRestore))
@@ -133,6 +131,13 @@ myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
   , ((modm .|. shiftMask, XMonad.xK_s     ), scrot ScrotSelection ScrotClipboard)
   , ((modm              , XMonad.xK_d     ), scrot ScrotWindow    ScrotFile)
   , ((modm .|. shiftMask, XMonad.xK_d     ), scrot ScrotWindow    ScrotClipboard)
+
+  , ((0, XF86.xF86XK_AudioMute),         spawn "pactl set-sink-mute 0 toggle")
+  , ((0, XF86.xF86XK_AudioLowerVolume),  spawn "pactl set-sink-volume 0 -5%")
+  , ((0, XF86.xF86XK_AudioRaiseVolume),  spawn "pactl set-sink-volume 0 +5%")
+  , ((0, XF86.xF86XK_AudioMicMute),      spawn "pactl set-source-mute 1 toggle")
+  , ((0, XF86.xF86XK_MonBrightnessDown), spawn "brightnessctl s 3%-")
+  , ((0, XF86.xF86XK_MonBrightnessUp),   spawn "brightnessctl s 3%+")
   ]
     ++ [ ((m .|. modm, k), windows $ f i) -- mod-[1..9], Switch to workspace N
        | (i, k) <- zip (workspaces conf) [XMonad.xK_1 .. XMonad.xK_9] -- mod-shift-[1..9], Move client to workspace N
