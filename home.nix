@@ -28,6 +28,7 @@ in
       google-chrome
       firefox
       file
+      binutils
       exa
       silver-searcher
       inkscape
