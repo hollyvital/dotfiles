@@ -37,7 +37,7 @@ in
       sublime-merge
       vimpc
       hicolor-icon-theme
-      dunstify
+      (dunst.override { dunstify = true; })
     ];
 
     sessionVariables = {
