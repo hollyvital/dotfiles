@@ -35,6 +35,8 @@ in
       glxinfo
       sublime-merge
       vimpc
+      hicolor-icon-theme
+      dunstify
     ];
 
     sessionVariables = {
@@ -51,6 +53,30 @@ in
   services = {
     mpd = {
       enable = true;
+    };
+    dunst = {
+      enable = true;
+      # details at https://github.com/dunst-project/dunst/blob/master/dunstrc
+      settings = {
+        global = {
+          follow = "keyboard";
+          geometry = "800x200-150-20";
+          separator_height = 8;
+          padding = 16;
+          horizontal_padding = 16;
+          corner_radius = 6;
+          mouse_left_click = "do_action";
+          mouse_middle_click = "close_all";
+          mouse_right_click = "close_current";
+          ellipsize = "end";
+          vertical_alignment = "center";
+          notification_height = 150;
+          word_wrap = true;
+          format = "<b>%a</b> - <i>%s</i>\\n%b";
+          show_indicators = false;
+          line_height = 2;
+        };
+      };
     };
   };
 
