@@ -20,6 +20,14 @@ in
       ".xmonad/xmonad.hs".source = ./xmonad.hs;
       ".zshrc".source = ./zshrc;
       ".zprofile".source = ./zprofile;
+      ".config/polybar/cal_remind.sh" = {
+        executable = true;
+        # if google refuses to authorize you may need a vital specific client_id. I can hook you up
+        text = ''
+          gcalcli agenda --nostarted --military --tsv today tomorrow | head -n 1 | cut -f 2,5 | sed 's/\t/ - /'
+          gcalcli remind 0
+        '';
+      };
     };
 
     packages = with pkgs; [
@@ -38,6 +46,7 @@ in
       vimpc
       hicolor-icon-theme
       (dunst.override { dunstify = true; })
+      gcalcli
     ];
 
     sessionVariables = {
