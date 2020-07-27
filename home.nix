@@ -24,7 +24,7 @@ in
         executable = true;
         # if google refuses to authorize you may need a vital specific client_id. I can hook you up
         text = ''
-          gcalcli agenda --nostarted --military --tsv today tomorrow | head -n 1 | cut -f 2,5 | sed 's/\t/ - /'
+          gcalcli agenda --nostarted --military --tsv today tomorrow | head -n 1 | cut -f 2,5 | sed 's/\t/ - /' | { read -r -t1 val && echo "$val" || echo 'NO MORE MEETINGS TODAY!' ; }
           gcalcli remind 0
         '';
       };
