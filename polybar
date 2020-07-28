@@ -88,8 +88,8 @@ label = "%percentage_used%% "
 [module/date]
 type = internal/date
 interval = 5
-date = "%Y-%m-%d"
-date-alt = "%Y-%m-%d"
+date = "%a %b %d"
+date-alt = "%m-%d"
 time = "%H:%M"
 time-alt = %H:%M:%S
 format-prefix = 
