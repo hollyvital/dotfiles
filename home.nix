@@ -36,6 +36,9 @@ in
       google-chrome
       firefox
       file
+      slack
+      zoom-us
+      gotop
       binutils
       exa
       silver-searcher
@@ -47,6 +50,14 @@ in
       hicolor-icon-theme
       (dunst.override { dunstify = true; })
       gcalcli
+      terraform
+      unzip
+      virt-manager
+      bmap-tools
+      screen
+      (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
+      remmina
+      (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}).discord
     ];
 
     sessionVariables = {
