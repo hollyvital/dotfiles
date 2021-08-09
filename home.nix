@@ -10,12 +10,14 @@ in
 
 {
   imports = [
-    /home/asa/git/vital-nix/user/feh-background.nix
-    /home/asa/git/vital-nix/user/p53.nix
-    /home/asa/git/vital-nix/user/software-workstation.nix
+    /home/holly/git/vital-nix/user/feh-background.nix
+    /home/holly/git/vital-nix/user/p53.nix
+    /home/holly/git/vital-nix/user/software-workstation.nix
   ];
 
   home = {
+    username = "holly";
+    homeDirectory = "/home/holly";
     file = {
       ".xmonad/xmonad.hs".source = ./xmonad.hs;
       ".zshrc".source = ./zshrc;
@@ -43,12 +45,12 @@ in
       exa
       silver-searcher
       inkscape
-      gimp
       glxinfo
       sublime-merge
       vimpc
       hicolor-icon-theme
-      (dunst.override { dunstify = true; })
+      dunst
+#      (dunst.override { dunstify = true; })
       gcalcli
       terraform
       unzip
@@ -57,7 +59,8 @@ in
       screen
       (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
       remmina
-      (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}).discord
+#      (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/master.tar.gz") {}).discord
+      krita
     ];
 
     sessionVariables = {
@@ -65,7 +68,7 @@ in
       TERM = "xterm-256color";
     };
 
-    stateVersion = "20.03";
+    stateVersion = "21.05";
   };
 
   nixpkgs.config = import ./nixpkgs-config.nix;
@@ -107,6 +110,8 @@ in
     git = {
       package = pkgs.gitAndTools.gitFull;
       enable = true;
+      userName = "hollyvital";
+      userEmail = "holly@vitalbio.com";
       extraConfig = {
         core.editor = "$EDITOR";
       };
@@ -131,7 +136,7 @@ in
     man.enable = true;
     
     firefox = {
-      profiles.asa = {
+      profiles.holly = {
         settings = {
           "browser.aboutConfig.showWarning" = false;
           "browser.bookmarks.editDialog.confirmationHintShowCount" = 3;
@@ -203,7 +208,8 @@ in
     "*.color7"   = "#f8f8f2";
     "*.color15"  = "#f9f8f5";
 
-    "Xft.dpi"       = 192;
+    #"Xft.dpi"       = 192;
+    "Xft.dpi"       = 96;
     "Xft.antialias" = true;
     "Xft.hinting"   = true;
     "Xft.rgba"      = "rgb";

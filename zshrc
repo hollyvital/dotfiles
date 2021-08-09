@@ -1,4 +1,4 @@
-#
+
 # Executes commands at the start of an interactive session.
 #
 # Authors:
@@ -6,8 +6,10 @@
 #
 
 # Source Prezto.
-PREZTO_DIR=$(nix-build --no-out-link -A zsh-prezto "<nixos>")
-if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ]; then
+# Tacked the /share/zsh=prezto on the end since it wasn't checking for recursive directories
+PREZTO_DIR=$(nix-build --no-out-link -A zsh-prezto "<nixos>")/share/zsh-prezto
+#if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
+if [ ! -L ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
   ln -s ${PREZTO_DIR}/runcoms/zpreztorc ${ZDOTDIR:-$HOME}/.zpreztorc
 fi
 source ${PREZTO_DIR}/init.zsh
@@ -21,7 +23,7 @@ HELPDIR=/usr/local/share/zsh/help
 
 setopt NO_SHARE_HISTORY
 
-prompt oliver
+#prompt oliver
 
 bindkey '^r' history-incremental-search-backward
 
@@ -35,6 +37,9 @@ fi
 
 alias sysu="systemctl --user"
 alias jour="journalctl --user"
+alias vi="nvim"
+alias vim="nvim"
+alias python="nix-shell -p python3"
 function nghci
 {
   set -x
