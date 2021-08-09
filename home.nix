@@ -44,7 +44,7 @@ in
       binutils
       exa
       silver-searcher
-      inkscape
+#      inkscape
       glxinfo
       sublime-merge
       vimpc
@@ -156,6 +156,7 @@ in
           "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
           "extensions.formautofill.addresses.enabled" = false;
           "ui.systemUsesDarkTheme"= 1;
+          "extensions.pocket.enabled" = false;
         };
       };
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [

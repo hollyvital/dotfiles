@@ -41,12 +41,14 @@ set wildmode=list:longest,full " Configure wildmenu
 
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
-call dein#add('Shougo/denite.nvim')
+"This add is also called further down so I shouldn't need this
+"call dein#add('Shougo/denite.nvim')
 if !has('nvim')
   call dein#add('roxma/nvim-yarp')
   call dein#add('roxma/vim-hug-neovim-rpc')
 endif
 
+"I think I need to have dein#begin before any other statement
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
