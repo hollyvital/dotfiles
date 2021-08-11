@@ -8,8 +8,7 @@
 # Source Prezto.
 # Tacked the /share/zsh=prezto on the end since it wasn't checking for recursive directories
 PREZTO_DIR=$(nix-build --no-out-link -A zsh-prezto "<nixos>")/share/zsh-prezto
-#if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
-if [ ! -L ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
+if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
   ln -s ${PREZTO_DIR}/runcoms/zpreztorc ${ZDOTDIR:-$HOME}/.zpreztorc
 fi
 source ${PREZTO_DIR}/init.zsh
@@ -24,6 +23,7 @@ HELPDIR=/usr/local/share/zsh/help
 setopt NO_SHARE_HISTORY
 
 #prompt oliver
+prompt sorin
 
 bindkey '^r' history-incremental-search-backward
 

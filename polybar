@@ -68,6 +68,7 @@ enable-scroll = false
 label-active-foreground = ${colors.foreground}
 label-active-background = ${colors.background}
 label-active-underline = ${xrdb:color4} 
+label-occupied-padding = 2
 label-empty-padding = 2
 label-active-padding = 2
 label-urgent-background = ${colors.primary}

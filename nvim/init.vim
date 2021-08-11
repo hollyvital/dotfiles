@@ -1,4 +1,7 @@
-
+"Set up backups
+if !isdirectory(getenv('HOME') . '/.local/share/nvim/backup')
+    execute '!mkdir -p ' . getenv('HOME') . '/.local/share/nvim/backup'
+endif
 " Basic stuff
 "
 set backup               " Turn on regular backups
@@ -56,11 +59,13 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('~/1st/denite-hoogle')
   call dein#add('Dridus/denite-hoogle.nvim')
 
+  call dein#add('1955parham/vim-spice')
   call dein#add('Shougo/denite.nvim') " Helm/Ivy/Unite
   call dein#add('Shougo/deoplete.nvim') " Auto-completion
   call dein#add('elzr/vim-json')
   call dein#add('fsharp/vim-fsharp')
   call dein#add('hashivim/vim-terraform')
+
   call dein#add('int3/vim-extradite') " Git log browser
   call dein#add('justinmk/vim-dirvish') " File browser that isn't NetRW
   call dein#add('kristijanhusak/vim-dirvish-git') " Git symbols for dir edits
@@ -72,6 +77,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('parsonsmatt/intero-neovim')
   call dein#add('simnalamburt/vim-mundo') " Undo tree browser
   call dein#add('spwhitt/vim-nix')
+
   " call dein#add('tbodt/deoplete-tabnine', { 'build': './install.sh' }) " Auto-completion via TabNine
   call dein#add('tpope/vim-commentary') " Add/remove comments
   call dein#add('tpope/vim-fugitive') " A git wrapper so awesome, it should be illegal
