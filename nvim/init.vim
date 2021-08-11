@@ -59,7 +59,7 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('~/1st/denite-hoogle')
   call dein#add('Dridus/denite-hoogle.nvim')
 
-  call dein#add('1955parham/vim-spice')
+  call dein#add('1995parham/vim-spice')
   call dein#add('Shougo/denite.nvim') " Helm/Ivy/Unite
   call dein#add('Shougo/deoplete.nvim') " Auto-completion
   call dein#add('elzr/vim-json')
