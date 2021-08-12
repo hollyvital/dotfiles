@@ -76,7 +76,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('neovimhaskell/haskell-vim')
   call dein#add('parsonsmatt/intero-neovim')
   call dein#add('simnalamburt/vim-mundo') " Undo tree browser
-  call dein#add('spwhitt/vim-nix')
+  call dein#add('LnL7/vim-nix')
 
   " call dein#add('tbodt/deoplete-tabnine', { 'build': './install.sh' }) " Auto-completion via TabNine
   call dein#add('tpope/vim-commentary') " Add/remove comments
