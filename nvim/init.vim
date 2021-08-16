@@ -59,6 +59,13 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('~/1st/denite-hoogle')
   call dein#add('Dridus/denite-hoogle.nvim')
 
+  " Rust!
+  call dein#add('sharksforarms/vim-rust')
+  call dein#add('rust-tools.nvim')
+  call dein#add('neovim/nvim-lspconfig')
+  call dein#add('nvim-lua/lsp_extensions.nvim')
+  call dein#add('nvim-lua/completion-nvim')
+
   call dein#add('1995parham/vim-spice')
   call dein#add('Shougo/denite.nvim') " Helm/Ivy/Unite
   call dein#add('Shougo/deoplete.nvim') " Auto-completion
@@ -331,3 +338,36 @@ nmap <D-8> <Plug>AirlineSelectTab8
 nmap <D-9> <Plug>AirlineSelectTab9
 nmap <D-left> <Plug>AirlineSelectPrevTab
 nmap <D-right> <Plug>AirlineSelectNextTab
+
+""Rust plugin configuration!
+" Take note: I have commented out anything that directly touches the language server
+" since I don't have that configured yet
+"" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+"" use <Tab> as trigger keys
+imap <Tab> <Plug>(completion_smart_tab)
+imap <S-Tab> <Plug>(completion_smart_s_tab)
+
+""Code actions
+"nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
+
+"" Set updatetime for CursorHold
+"" 300ms of no cursor movement to trigger CursorHold
+set updatetime=300
+"" Show diagnostic popup on cursor hold
+"autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+
+"" Goto previous/next diagnostic warning/error
+nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+
+"" have a fixed column for the diagnostics to appear in
+"" this removes the jitter when warnings/errors flow in
+set signcolumn=yes
+
+"" Enable type inlay hints
+"autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *
+"\ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
+

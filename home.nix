@@ -40,7 +40,7 @@ in
           percent=`acpi -b | grep -P -o '[0-9]+(?=%)'`
           if [ $percent -le 15 ]
           then
-            dunstify -a "BATTERY LOW" -u critical "danger!" "Connect the power cable!"
+            dunstify -a "BATTERY LOW" -u critical "danger!" "Running out of magic pixies!"
           fi
           echo 'ran batt' >> /home/holly/cron.log
         '';
