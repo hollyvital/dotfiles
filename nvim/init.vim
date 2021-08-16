@@ -346,10 +346,6 @@ nmap <D-right> <Plug>AirlineSelectNextTab
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-"" use <Tab> as trigger keys
-imap <Tab> <Plug>(completion_smart_tab)
-imap <S-Tab> <Plug>(completion_smart_s_tab)
-
 ""Code actions
 "nnoremap <silent> ga    <cmd>lua vim.lsp.buf.code_action()<CR>
 
