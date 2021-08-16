@@ -61,7 +61,7 @@ if dein#load_state('~/.cache/dein')
 
   " Rust!
   call dein#add('sharksforarms/vim-rust')
-  call dein#add('rust-tools.nvim')
+  call dein#add('simrat39/rust-tools.nvim')
   call dein#add('neovim/nvim-lspconfig')
   call dein#add('nvim-lua/lsp_extensions.nvim')
   call dein#add('nvim-lua/completion-nvim')
