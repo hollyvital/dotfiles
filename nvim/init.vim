@@ -41,7 +41,7 @@ set textwidth=0          " Don't wrap until I tell you
 set timeoutlen=2000      " Set multikey timeout to 2 seconds
 set undofile             " Persist undo information across sessions
 set wildmode=list:longest,full " Configure wildmenu
-
+set clipboard=unnamedplus
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
 "This add is also called further down so I shouldn't need this
