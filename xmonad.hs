@@ -44,14 +44,16 @@ import XMonad.Util.SpawnOnce (spawnOnce, spawnOnOnce)
 myTerminal :: String
 myTerminal = "kitty"
 
-codeWS, referenceWS, commsWS, officeWS, remoteWS :: String
+codeWS, termin, referenceWS, commsWS, officeWS, remoteWS, browsan :: String
 codeWS = "Code"
+termin = "Terminal"
 referenceWS = "Reference"
 commsWS = "Comms"
 officeWS = "Office"
 remoteWS = "Remote"
+browsan = "Browser"
 myWorkspaces :: [String]
-myWorkspaces = [codeWS, referenceWS, commsWS, officeWS, remoteWS]
+myWorkspaces = [codeWS, termin, referenceWS, commsWS, officeWS, remoteWS, browsan]
 
 gaps :: l a -> ModifiedLayout Spacing l a
 gaps = spacingRaw True (Border 0 0 0 0) False (Border 4 4 4 4) False -- gaps (border / window spacing)

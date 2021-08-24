@@ -1,0 +1,191 @@
+YOU GOT VIM POWER!
+
+ while in command mode:
+  space + fp = use denite's search to find a file
+              you can type in the path to a file to change the search criteria
+               hit enter to close the search
+               select the file you want to open and hit enter again
+
+  (space + w) + m = run make commands directly in vim.
+                    There's some extra setup that I've forgotten. It's something like:
+                    : let make ____ = 'cargo build'
+  YOU CAN MOVE THE CONSOLE OUTPUT WINDOW AROUND!
+  ctrl + w, then H | J| K| L => moves the error window around
+            and h | j | k | l => moves the cursor from one window to another
+
+  d + a + (
+
+  Look up "text objects" for additional powers!
+
+
+####################################################################################
+
+Want to make changes to your gui?
+  Modify your xmonad.hs file
+  Win+Shift+x (win+X) to reload polybar
+  Win+shift+a (with+A) to rebuild home-manager and xmonad
+
+  you may also need to :
+    systemctl restart display-manager
+
+-----------------------------------
+FORGOT TO GIT PULL?
+  git pull --rebase
+    ^- should solve most of your problems
+
+    You can also:
+      git reflog
+      git rebase --interactive
+
+      And this is a good combo as well
+      git remote update
+      git rebase
+
+==========================================================================================
+PARTIONING A MICROSD CARD
+  nix-shell -p parted
+  lsblk -l
+  sudo parted /dev/<device_name>
+  mklabel gpt
+  Do the following as much as needed:
+    mkpart <label> ext4 START_OF_PARTITION_LOCATION END_OF_PARTITION_LOCATION
+  For as many partitons you've made:
+    align-check
+      o
+     <partition number>
+  quit //will save changes
+
+  lsblk //to confirm the devices show up
+  sudo mkfs.ext /dev/sda<number> //For as many partitions you've created
+
+  You can now mount any of these partitions! Hooray!
+
+  If you want to access the images after you've flashed them (or directly on the img)
+
+  fdisk -l <image_name>.img
+  fdisk -l /dev/<device/partion_name>
+
+------------------------------------------------------------------------------------
+
+Hey, remember that time you broke Eric's /etc/fstab? Yeah, here's how you fixed it:
+  Eric did something like this:
+    https://www.systutorials.com/bypassing-bad-fstab-failure-while-booting-linux/
+    You used this guide mostly: https://linuxconfig.org/howto-mount-usb-drive-in-linux
+  Put the micro sd card into  card reader and plug it in to your laptop
+  lsblk <- finds connected devices
+  sudo fdisk -l <- does this in a different way 
+  ^- these commands will let you locate the device and the drive you want to mount
+
+  You created a /media/sdcard directory
+  sudo mount /path/to/sdcard /media/sdcard
+
+  And then you can use it like a regular disk. You sudo nvim'd /etc/fstab and deleted the offending line
+
+  WHEW.
+
+  umount /media/sdcard
+
+  You also had to mount onto the Linux OS portation and change cmd<something>.txt and remove:
+    init=/bin/sh
+
+To open PDFs from commandline:
+  xdg-open <filename>
+    Takes up a terminal!
+ 
+nix-garbage-collect => clear your local nix cache and sumlinks
+nix-store --delete => clear local hanging paths and not break anything (hopefully)
+nix-build --no-out-link --keep-failed /nix/store/fp3j4qz05sj5zxys9f2j2gqy8mqbai2h-linux-5.4.109-rt55-armv7l-unknown-linux-gnueabihf.drv
+  \-> build armv7l-unknown-linux-gnueabi from scatch, keep files if the build fails
+
+
+General ops
+========================================================================
+neovim plugins
+  Add neovim and zsh-prezto do your home.nix if you haven't already got it
+   Also, in your dotfiles, add an init.vim; this is where most of the config lives
+     Add your plugins in the `:call dein#add('gihub_user/github_project')
+     Save and quit
+  Open neovim with nvim
+    type :call dein#install()
+    Wait a bit
+     To check for errors do :messages 
+
+1Password:
+  Uou can go to invitations. From there, add people by their vital email. Confirm when they have accepted
+  Once they have accepted, you can create a new vault for them. This is how we give out logins for the fileserver.
+    And possibly other things
+
+Add user to configuration.nix
+  Similar to the fileserver and the beast
+  You want to create to hash the  passwords you created with 1password
+  YOU SOLVED THIS PROBLEM! 
+    Use python
+    nix-shell -p python3
+    python
+    import crypt
+      crypt.crypt("Password in the clear") will encode the password
+      Do the things!
+
+  /etc/nixos/configuration.nix
+    find one of the user entries. Duplicate it and update it with the user's new details
+
+FILESERVER!
+   All the steps for adding people on the beast, except there are some extra steps!
+
+  smbpasswd -a username 
+  In the password prompt: PASTE THE UNHAHSED CLEARTEXT PASSWORD FROM 1PASS
+  AMD THEN!
+  go to the /etc/nixos/configuration.nix
+    There is a list of groups at teh end of the file. You need to add them to the group that their function is associated with
+    People generallt don't know what share they need. You need a way to know what their function is and assign directly
+      Get their manager to tell you?
+      Check the org chart?
+      I dunno!
+  You need to create an individual user and also add the username to one of the fileserver groups
+    then rebuild the nixos
+  And *then* you can use the smbpasswd command
+
+diagram for requirements and 
+  "why did you do the way you did"
+    Check out the templates for the design documents
+
+
+nix-shell -A shells.rust .
+
+Cyclops ops
+# start
+(gotta be root)
+  ssh marsden.vital.company //Use the same creds as the beast for now!
+cd ~cyclops; nohup ./cyclops-controller cyclops-controller.yaml &
+ //DON'T FORGET THE AMPERSAND!
+
+nix-build -A device.haskellProject.phoenix-controller.components.exes.phoenix-controller
+nix-build -A device.rustProject.phoenix-driver-testbench1
+nix-build -A host.haskellProject.cyclops-controller.components.exes.cyclops-controller
+
+krakoa
+build.sh magneto.nix
+./flash.sh /dev/mmcblk0 //Works with a particular SD card reader. Don't count on it to be named the same.
+./flash.sh /dev/sda //The result of the lsblk command. Corresponds with the drive/SSD card
+lsblk # lists the current usb connected things
+screen /dev/ttyUSB0 115200 // Probably don't need it. A way to connect to the beaglebone from a remote terminal. Number is in baud
+
+Polaris initialization error 8 -> usually means "unplug and replug the wires. restart the controller. double check that it's ok"
+
+nix-shell -p "(import ./instrument-client.nix)"
+import asyncio
+from vital.mystique import *
+reads = []
+temps = []
+async def go():
+  async with MystiqueClient("127.0.0.1", read_data=reads, temp_data=temps) as client:
+    await client.run_custom_program(program=[track_read(duration=0, sample_count=32, readout_channel=CHANNEL_505, target_light=0.05)], title="local_test")
+asyncio.run(go())
+
+Cargo Building!
+  nix-build -A device.rustProject.phoenix-driver-testbench1
+  nix-build -A device.rustProject.phoenix-driver-testbench1 --no-out-link # otherwise there is a result symlink created as part of the build
+   nix-shell -A shells.rust .
+  rustup install stable
+  rustup target add armv7-unknown-linux-gnueabihf
+
