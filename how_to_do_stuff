@@ -1,3 +1,6 @@
+Running a [[bin]] function in rust!
+  cargo run --bin phoenix-datalogger
+
 smerge = Sublime Merge
   GUI merge tool installed on in the nix files. Use when you want to see a visual represenataion
     of what is going on in your repo
@@ -175,6 +178,8 @@ build.sh magneto.nix
 ./flash.sh <testbench-X> /dev/sda //The result of the lsblk command. Corresponds with the drive/SSD card
 lsblk # lists the current usb connected things
 screen /dev/ttyUSB0 115200 // Probably don't need it. A way to connect to the beaglebone from a remote terminal. Number is in baud
+
+If you need to connect to the firewall it has no name. It's the gateway ip.
 
 Polaris initialization error 8 -> usually means "unplug and replug the wires. restart the controller. double check that it's ok"
 

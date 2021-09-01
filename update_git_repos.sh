@@ -8,4 +8,7 @@ git submodule update --init --recursive
 printf "Vitalone Device and submodules updated\n=======================\n"
 cd ../software-operations
 git pull
-echo "Software-operations updated"
+printf "Software-operations updated\n=======================\n"
+cd ../vital-nix
+git pull
+printf "Vital Nix updated\n=======================\n"
