@@ -50,8 +50,9 @@ in
     packages = with pkgs; [
       zsh-prezto
       neovim
-      google-chrome
+      #google-chrome 
       firefox
+      ripgrep
       file
       slack
       zoom-us
@@ -59,8 +60,8 @@ in
       binutils
       exa
       silver-searcher
-      glxinfo
-      sublime-merge
+      glxinfo 
+      sublime-merge #Cozy merge conflict gui
       vimpc
       hicolor-icon-theme
       dunst
@@ -73,9 +74,8 @@ in
       screen
       (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
       remmina
-      krita
-      discord
-      _1password-gui
+      krita #Move over, Photoshop!
+      _1password-gui #Fixme
     ];
 
     sessionVariables = {
