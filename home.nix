@@ -122,6 +122,11 @@ in
   programs = {
     home-manager.enable = true;
 
+    neovim = {
+      viAlias = true;
+      vimAlias = true;
+      package = pkgs.neovim-nightly;
+    };
     git = {
       package = pkgs.gitAndTools.gitFull;
       enable = true;
@@ -172,6 +177,8 @@ in
           "extensions.formautofill.addresses.enabled" = false;
           "ui.systemUsesDarkTheme"= 1;
           "extensions.pocket.enabled" = false;
+          "extensions.pocket.showHome" = false;
+          "extensions.pocket.onSaveRecs" = false;
         };
       };
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
