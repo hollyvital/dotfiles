@@ -62,8 +62,8 @@ if dein#load_state('~/.cache/dein')
   " Rust!
   call dein#add('sharksforarms/vim-rust')
   call dein#add('simrat39/rust-tools.nvim')
-  call dein#add('neovim/nvim-lspconfig')
-  call dein#add('nvim-lua/lsp_extensions.nvim')
+  "call dein#add('neovim/nvim-lspconfig')
+  "call dein#add('nvim-lua/lsp_extensions.nvim')
   call dein#add('nvim-lua/completion-nvim')
 
   call dein#add('1995parham/vim-spice')
@@ -356,8 +356,8 @@ set updatetime=300
 "autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 "" Goto previous/next diagnostic warning/error
-nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+"nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+"nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 "" have a fixed column for the diagnostics to appear in
 "" this removes the jitter when warnings/errors flow in
