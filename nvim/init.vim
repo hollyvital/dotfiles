@@ -64,7 +64,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('simrat39/rust-tools.nvim')
   "call dein#add('neovim/nvim-lspconfig')
   "call dein#add('nvim-lua/lsp_extensions.nvim')
-  call dein#add('nvim-lua/completion-nvim')
+  "call dein#add('nvim-lua/completion-nvim')
 
   call dein#add('1995parham/vim-spice')
   call dein#add('Shougo/denite.nvim') " Helm/Ivy/Unite
