@@ -134,6 +134,7 @@ in
       userEmail = "holly@vitalbio.com";
       extraConfig = {
         core.editor = "$EDITOR";
+        pull.rebase = true;
       };
     };
 
