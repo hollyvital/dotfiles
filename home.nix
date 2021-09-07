@@ -50,7 +50,10 @@ in
     packages = with pkgs; [
       zsh-prezto
       neovim
-      #google-chrome 
+      #google-chrome
+      gnumake
+      ctags
+      glibc.dev
       firefox
       ripgrep
       file

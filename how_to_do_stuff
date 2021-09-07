@@ -1,3 +1,12 @@
+
+ECHO $PATH except readable:
+tr ':' '\n' <<< "$PATH"
+
+Command in nvim for rust builds:
+  :let &mkprg = 'make rust'
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Do you want to delete *more* things with a garbage collect?
 
   nix-collect-garbage -d
@@ -35,6 +44,7 @@ YOU GOT VIM POWER!
 
   Look up "text objects" for additional powers!
 
+  It is in your best interest to review your init.vm for <leader> patterns for extra strength
 
 ####################################################################################
 

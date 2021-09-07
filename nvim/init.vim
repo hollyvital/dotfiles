@@ -289,6 +289,8 @@ nnoremap <silent> <leader>Hl :Denite hoogle -default-action=open_link<cr>
 
 " Miscellaneous
 "
+nnoremap <leader>mm make
+nnoremap <leader>mr :let &makeprg='make rust'<cr>
 
 " Clear the highlight
 map <silent> <leader>sc :nohlsearch<cr>
