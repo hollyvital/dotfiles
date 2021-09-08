@@ -1,6 +1,16 @@
 
+WLAN is softblocked:
+  What the hell happened here? I'm not sure. Laptop's been a pain today.
+  To fix:
+    $ rfkill list
+      Confirm that it is, in fact, softblocked
+    $ sudo rfkill unblok wlan
+  
+
 ECHO $PATH except readable:
 tr ':' '\n' <<< "$PATH"
+  You can also:
+  echo "$PATH" | tr ':' '\n'
 
 Command in nvim for rust builds:
   :let &mkprg = 'make rust'
@@ -53,7 +63,7 @@ Want to make changes to your gui?
   Win+Shift+x (win+X) to reload polybar
   Win+shift+a (with+A) to rebuild home-manager and xmonad
 
-  you may also need to :
+  you may also need to 
     systemctl restart display-manager
 
 -----------------------------------
