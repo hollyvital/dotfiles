@@ -1,4 +1,9 @@
 
+When llvm-tools-preview is installed 
+  cargo readobj --target <build-target> --bin <name> -- --file-header
+
+/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\/.\
+
 WLAN is softblocked:
   What the hell happened here? I'm not sure. Laptop's been a pain today.
   To fix:
@@ -19,7 +24,7 @@ Command in nvim for rust builds:
 
 Do you want to delete *more* things with a garbage collect?
 
-  nix-collect-garbage -d
+  nix-collect-garbage -d 
 
 Installed a bad package with dein?
 

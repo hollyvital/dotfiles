@@ -183,6 +183,7 @@ in
           "extensions.pocket.enabled" = false;
           "extensions.pocket.showHome" = false;
           "extensions.pocket.onSaveRecs" = false;
+          "services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket" = false;
         };
       };
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
