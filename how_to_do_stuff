@@ -1,4 +1,9 @@
-
+BLUETOOH EARBUDS!
+  bluetoothctl scan (you may need to go somewhere that doesn't have so much bluetooth noise)
+  bluetoothctl pair <MAC ADDRESS>
+  bluetoothctl trust <MAC ADDRESS>
+  bluetoothctl connect <MAC ADDRESS>
+  
 When llvm-tools-preview is installed 
   cargo readobj --target <build-target> --bin <name> -- --file-header
 
@@ -212,6 +217,8 @@ build.sh magneto.nix
 ./flash.sh <testbench-X> /dev/sda //The result of the lsblk command. Corresponds with the drive/SSD card
 lsblk # lists the current usb connected things
 screen /dev/ttyUSB0 115200 // Probably don't need it. A way to connect to the beaglebone from a remote terminal. Number is in baud
+
+To log into testbenches, check the 1Password, Software Operations, You're looking for Vital Device Root
 
 If you need to connect to the firewall it has no name. It's the gateway ip.
 

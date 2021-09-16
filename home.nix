@@ -79,6 +79,7 @@ in
       remmina
       krita #Move over, Photoshop!
       _1password-gui #Fixme
+      kicad #Circuit board software
     ];
 
     sessionVariables = {
