@@ -1,3 +1,5 @@
+Chaining args 
+
 BLUETOOH EARBUDS!
   bluetoothctl scan (you may need to go somewhere that doesn't have so much bluetooth noise)
   bluetoothctl pair <MAC ADDRESS>
