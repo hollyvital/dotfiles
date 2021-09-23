@@ -178,7 +178,10 @@ in
           "browser.tabs.loadInBackground" = false;
           "browser.urlbar.placeholderName" = "DuckDuckGo";
           "browser.urlbar.placeholderName.private" = "DuckDuckGo";
-          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          "browser.theme.toolbar-theme" = 0;
+          #"extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          "extensions.activeThemeID" = "e8f3b919-d290-4270-b66f-29f3fdbb1986";
+          "extensions.ui.theme.hidden" = false;
           "extensions.formautofill.addresses.enabled" = false;
           "ui.systemUsesDarkTheme"= 1;
           "extensions.pocket.enabled" = false;
