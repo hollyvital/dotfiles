@@ -80,6 +80,7 @@ in
       krita #Move over, Photoshop!
       _1password-gui #Fixme
       kicad #Circuit board software
+      vlc
     ];
 
     sessionVariables = {
