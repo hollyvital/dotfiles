@@ -1,4 +1,39 @@
-Chaining args 
+Want to do anything with USB connectivity?
+  nix-shell -p usbutils
+  lsusb
+
+  platformio run --target upload -e SAMD51_grandcentral_m4
+
+  You can just write to /dev/ttyACM0!
+
+  I might just add this to my configuration.nix
+
+Some more git?
+
+  show diff between staged and last commit:
+    git diff --staged origin/phoenix-tester
+
+  you can always do this to see the difference between HEAD and remote:
+  git show
+
+  git diff HEAD..origin/phoenix-tester
+  git diff HEAD..origin/phoenix-tester --stat
+  git show-ref
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Hey buzzbuzz! It's almost been 3 months. LOOK AT HOW MUCH MAGIC YOU'VE LEARNED! :3
+
+NEOVIM POWERS!
+vs (to do a vertical split)
+Ctrl+w + hjkl to move between buffers
+  BUT IF YOU LOOK DOWN YOU SEE YOU ALREADY HAVE THAT POWER!
+
+Also you learned about mpc123 or whatever it's called. And the power of running audio files from commandline
+  There's supposed to be "nvlc" for running audio files commandline-style but it's not in the vlc bundle on nixos :(
+    It DOES use SDL_Image though :O
+      I feel like I'm getting so close to being a legit wizard
+  There's something that I already have on my system but I don't remember what it's called. :(
 
 BLUETOOH EARBUDS!
   bluetoothctl scan (you may need to go somewhere that doesn't have so much bluetooth noise)
@@ -65,6 +100,7 @@ YOU GOT VIM POWER!
   d + a + (
 
   Look up "text objects" for additional powers!
+    You really aught to do that
 
   It is in your best interest to review your init.vm for <leader> patterns for extra strength
 
@@ -91,6 +127,8 @@ FORGOT TO GIT PULL?
       git remote update
       git rebase
 
+  What if there are subdirectories in git that you would like to update?
+  git submodule update --init --recursive
 ==========================================================================================
 PARTIONING A MICROSD CARD
   nix-shell -p parted
