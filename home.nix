@@ -180,7 +180,7 @@ in
           "browser.urlbar.placeholderName" = "DuckDuckGo";
           "browser.urlbar.placeholderName.private" = "DuckDuckGo";
           "browser.theme.toolbar-theme" = 0;
-          #"extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
           "extensions.activeThemeID" = "e8f3b919-d290-4270-b66f-29f3fdbb1986";
           "extensions.ui.theme.hidden" = false;
           "extensions.formautofill.addresses.enabled" = false;
@@ -192,7 +192,9 @@ in
         };
       };
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-        1password-x-password-manager
+        onepassword-password-manager
+        ublock-origin
+        solarized-light
       ];
     };
   };
