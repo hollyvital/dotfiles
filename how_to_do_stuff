@@ -1,4 +1,87 @@
-Want to do anything with USB connectivity?
+
+How about that time you had a hash mismatch error when compiling haskell stuff?
+  This package was the one that was erroring out:
+
+  hash mismatch importing path '/nix/store/348fk05hmlzb68jdh86vmzd0hj8s8g3z-openjdk-16+36';
+    wanted: sha256:1kxrwmm0mp76241br4b0c6bw77jczw5nabx1vmxpsb2syl97zdrn
+    got:    sha256:1wlymf030vykc3zaqzi5m1z94v6wwx08nwaknb1hi5z6fy5494ml
+
+  Did a:
+    nix-store --delete /nix/store/348fk05hmlzb68jdh86vmzd0hj8s8g3z-openjdk-16+36
+  and then
+    nix-store --realise /nix/store/nj92iz8d6cirfdy97bkwi2am6mprs9y3-web-minify-research-ui.drv
+
+    (Didn't work but this is a thing you can do)
+
+
+|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|
+
+Ways to handle interface tests properly:
+- research mockall
+  mocks force better design thinking~
+    replace a concrete implementation to one that allows anything of a certain type to attach
+      Want bi-directional communication that can also take socket information
+- research pty
+  Good to know how to do but you probably only want to mockall for this
+= what happens if the client is writing and goes away
+= what if it takes time to respond
+
+
+- reapi for gambit-driver
+  review workbooks that exist (nonverbal feedback)
+    Do they have strange workarounds for things?
+    Do they have to do awakward things?
+  get feedback from people who use it
+  Think about reducing it to a single command that can be sent without any parameters
+    Remember that the gambit-config.yaml is part of the interface; think about what can be actually moved in there and used
+  Write out on notion, go back and review. Think. Review. Write. Think. Write.
+
+
+==================================================
+YOU WANT SOME GOOGLE SHEETS HOTKEYS?
+Yeah you do.
+The important part is to 
+  Left Alt + I (shift + i) //to activate insert
+    r //for rows
+    a | b //for above | below
+
+Some tools~
+  Spectrogram: needs to draw and read audio files, maybe open a window
+
+  file - will tell what kind of file a file is!
+  hexyl - look at the hex of a file
+  hexedit - edit the hex of a file in a terminal (here be dragons)
+    (it looks a bit rough, there may be a better tool)
+  xxd - hex editor that a lot of people seem to use?
+    Ok, it creates a hex dump from stdin, can convert hex dump back to binary.
+    So xxd to file, use vim, xxd back to executable
+  readelf - looks at the program's organization
+  nm - list functions (does not demangle)
+  strace - run a program looking for various call names
+  gdb - debugger! 
+    starti - start debugging, pause at first instruction
+    start - start debugging with normal execution
+    info proc - get information about process; shows pid
+      (in another terminal)
+      cat /proc/<pid>/maps - show memory mapped files for the process, includes premissions for the process
+        processes can be readable and ( writable or executable )
+          A process can be only executable without being readable or writable
+  objdump - can decompile a program to see the assembly
+      objdump --disassemble=<specific function> -M intel claptrap
+      Wow, -M seems to be undocumented. It lets you pick which assembly language to decompile into.
+      Allegedly Intel syntax is for those who don't hate themselves. Guess I should use AT&T, eh?
+
+    assembly! (I'm not putting everything in here. Go look up intel syntax on the internets for a full instruction set)
+      lea - load effective address
+      mov - copies right side address into left side register
+        mov rax, QWORD PTR [rsi]
+
+find and replace in neovim!
+ :s/word/newword/flags
+ you can do a Ctrl+Q to enter keystrokes that are hard to enter otherwise (think of the enter key!)
+ :s/\\n/<ctrl+q> Enter/g
+
+Want to do anything with USB connectivity?i
   nix-shell -p usbutils
   lsusb
 

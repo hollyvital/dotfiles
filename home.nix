@@ -11,7 +11,7 @@ in
 {
   imports = [
     /home/holly/git/vital-nix/user/feh-background.nix
-    /home/holly/git/vital-nix/user/p53.nix
+    /home/holly/git/vital-nix/user/thinkpad.nix
     /home/holly/git/vital-nix/user/software-workstation.nix
   ];
 
@@ -50,6 +50,7 @@ in
     packages = with pkgs; [
       zsh-prezto
       neovim
+      hexyl # command line hex viewer with pretty colours
       #google-chrome
       gnumake
       ctags
@@ -81,6 +82,8 @@ in
       _1password-gui #Fixme
       kicad #Circuit board software
       vlc
+      fd  #find but actually usable
+      bat #cat with syntax highlighting
     ];
 
     sessionVariables = {
@@ -180,7 +183,7 @@ in
           "browser.urlbar.placeholderName" = "DuckDuckGo";
           "browser.urlbar.placeholderName.private" = "DuckDuckGo";
           "browser.theme.toolbar-theme" = 0;
-          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          #"extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
           "extensions.activeThemeID" = "e8f3b919-d290-4270-b66f-29f3fdbb1986";
           "extensions.ui.theme.hidden" = false;
           "extensions.formautofill.addresses.enabled" = false;
