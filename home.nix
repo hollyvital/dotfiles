@@ -62,6 +62,7 @@ in
       zoom-us
       gotop
       binutils
+      usbutils
       exa
       silver-searcher
       glxinfo 
@@ -84,6 +85,7 @@ in
       vlc
       fd  #find but actually usable
       bat #cat with syntax highlighting
+      #saleae-logic-2 
     ];
 
     sessionVariables = {

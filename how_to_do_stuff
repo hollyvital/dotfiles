@@ -1,3 +1,42 @@
+That one time you borked the certs on research-mystique-5c.cert and .key files?
+  Delete them from: 
+    /root/internal-ca/pki/issued/
+    /root/internal-ca/pki/private/
+  And then delete the line entry in the related index.txt
+
+That one time you kept getting stuck with a modified deps/strog-hs that you couldn't git submodule update --init --recursive --progress out of?
+  WE FIXED IT BY:
+    rm -rf .git/modules/deps/strog-hs
+    rm -rf .git/modules/deps/composite
+    rm -rf deps/strog-hs
+    rm -rf deps/composite
+    git submodule update --init
+
+I also had to delete some old folders in deps/ in order for the build to cleanly work
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+How we debugged the JLink Probe:
+  did a sudo -i, cd'd into $HOME/.cargo/bin (where probe-rs-cli lives)
+  RUST_LOG=debug ./probe-rs-cli info --chip ATSAMD51J18A
+    It keeps complaining about JTAG not selected, we want SWD so no problem
+  The end resolution was to connect the pins on the 50-Mil 10-pin adapter board that I got because those pins aren't connected via traces.
+
+  Parts of things we tried for troubleshooting:
+    Multimeter: V- side, 200m
+      Check the COMM for power via USB
+        Ground on one probe,
+          Connect the other probe to:
+            - The power on the COMM port
+            - the "bottom" of C35, C19, C21
+    Multimeter on the noisy red speaker
+      From the breakout pins on the adapter to the 10
+
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
+Screen recorder + Audio + doesn't look like trash: SimpleScreenRecorder
+Video Editer: Kdenlive
+  both can be nix-shell -p'd as simplescreenrecorder and kdenlive
 
 How about that time you had a hash mismatch error when compiling haskell stuff?
   This package was the one that was erroring out:
