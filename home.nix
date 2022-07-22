@@ -63,6 +63,8 @@ in
       gotop
       binutils
       usbutils
+      libftdi
+      libusb
       exa
       silver-searcher
       glxinfo 
@@ -80,12 +82,13 @@ in
       (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
       remmina
       krita #Move over, Photoshop!
-      _1password-gui #Fixme
+#      _1password-gui #Fixme
       kicad #Circuit board software
       vlc
       fd  #find but actually usable
       bat #cat with syntax highlighting
-      #saleae-logic-2 
+      saleae-logic-2 
+      hexedit # Wanna read a wall of hex?
     ];
 
     sessionVariables = {

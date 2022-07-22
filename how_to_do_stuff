@@ -21,6 +21,27 @@ How we debugged the JLink Probe:
   RUST_LOG=debug ./probe-rs-cli info --chip ATSAMD51J18A
     It keeps complaining about JTAG not selected, we want SWD so no problem
   The end resolution was to connect the pins on the 50-Mil 10-pin adapter board that I got because those pins aren't connected via traces.
+  Failed to get information for AP ApAddress thing...
+
+  PART TWO:
+    0) Set up udev on NixOs to stop having to run as sudo (which will break in different ways you do *not* want to deal with)
+    1) RUST_LOG=probe_rs=trace probe-rs-cli info
+      Gives detailed and pretty log info for debugging purposes
+      In the case of (2) there's plenty of output that says NOACK, so no communication is happening even if the pipe is conntected
+    2) Error: Failed to get information for AP ApAddress { dp: Default, ap: 0 }
+      will appear when your ribbon cable is backwards
+    3)
+      RTT error: Error communicating with probe: A core architecture specific error occured
+      ────────────────────────────────────────────────────────────────────────────────
+      Error: A core architecture specific error occured
+      
+      Caused by:
+          0: Failed to write register TAR at address 0x00000004
+          1: An error specific to the selected architecture occured
+          2: Target device did not respond to request.
+    The above happens when something strange happens (or you hit the reset button during dev)
+      You need to unplug both JLink debugger and the power source USB
+
 
   Parts of things we tried for troubleshooting:
     Multimeter: V- side, 200m
@@ -49,9 +70,7 @@ How about that time you had a hash mismatch error when compiling haskell stuff?
     nix-store --delete /nix/store/348fk05hmlzb68jdh86vmzd0hj8s8g3z-openjdk-16+36
   and then
     nix-store --realise /nix/store/nj92iz8d6cirfdy97bkwi2am6mprs9y3-web-minify-research-ui.drv
-
     (Didn't work but this is a thing you can do)
-
 
 |=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|=|
 
@@ -120,7 +139,7 @@ find and replace in neovim!
  you can do a Ctrl+Q to enter keystrokes that are hard to enter otherwise (think of the enter key!)
  :s/\\n/<ctrl+q> Enter/g
 
-Want to do anything with USB connectivity?i
+Want to do anything with USB connectivity?
   nix-shell -p usbutils
   lsusb
 
