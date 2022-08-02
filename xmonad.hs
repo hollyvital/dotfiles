@@ -1,7 +1,6 @@
 {-# OPTIONS_GHC -Wall -Werror -Wno-unused-imports #-}
 
 import Data.Bits ((.|.))
-import Data.Default (def)
 import qualified Data.Map as M
 import Data.Semigroup (Endo)
 import Graphics.X11.ExtraTypes.XF86 as XF86
@@ -177,7 +176,7 @@ main = do
   where
     tabs = tabBar shrinkText theme Top (resizeVertical (D.fi . D.decoHeight $ theme) Simplest)
     tiles = ResizableTall 1 (3 / 100) (0.5) []
-    theme = def
+    theme = D.def
       { D.activeColor         = "#f92672"
       , D.activeBorderColor   = "#f92672"
       , D.activeTextColor     = "#f8f8f2"

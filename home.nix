@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
-
   xmonad = pkgs.xmonad-with-packages.override {
     packages = p: with p; [ xmonad-contrib xmonad-extras ];
   };
