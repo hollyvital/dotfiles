@@ -196,6 +196,7 @@ in
           "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
           "browser.newtabpage.activity-stream.feeds.snippets" = false;
           "browser.newtabpage.activity-stream.feeds.topsites" = false;
+          "browser.uidensity" = 20;
           "browser.search.region" = "US";
           "browser.search.suggest.enabled" = false;
           "browser.tabs.loadInBackground" = false;
@@ -206,11 +207,12 @@ in
           "extensions.activeThemeID" = "e8f3b919-d290-4270-b66f-29f3fdbb1986";
           "extensions.ui.theme.hidden" = false;
           "extensions.formautofill.addresses.enabled" = false;
-          "ui.systemUsesDarkTheme"= 1;
           "extensions.pocket.enabled" = false;
           "extensions.pocket.showHome" = false;
           "extensions.pocket.onSaveRecs" = false;
+          "layout.css.devPixelsPerPx" = 2;
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket" = false;
+          "ui.systemUsesDarkTheme"= 1;
         };
       };
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
