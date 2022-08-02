@@ -70,6 +70,8 @@ in
       glxinfo 
       sublime-merge #Cozy merge conflict gui
       vimpc
+      fd
+      fzf
       hicolor-icon-theme
       dunst
 #      (dunst.override { dunstify = true; })
@@ -82,17 +84,19 @@ in
       (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
       remmina
       krita #Move over, Photoshop!
-#      _1password-gui #Fixme
       kicad #Circuit board software
       vlc
       fd  #find but actually usable
       bat #cat with syntax highlighting
       saleae-logic-2 
       hexedit # Wanna read a wall of hex?
+      lsd
     ];
 
     sessionVariables = {
       EDITOR = "nvim";
+      VISUAL = "nvim";
+      FZF_DEFAULT_COMMAND = "fd --type f";
       TERM = "xterm-256color";
     };
 
@@ -148,10 +152,22 @@ in
       extraConfig = {
         core.editor = "$EDITOR";
         pull.rebase = true;
+        core.pager = "${pkgs.delta}/bin/delta";
+        interactive.diffFilter = "${pkgs.delta}/bin/delta --color-only";
+        add.interactive.useBuiltin = false;
+        include.path = "${builtins.fetchurl "https://raw.githubusercontent.com/dandavison/delta/4c879ac1afca68a30c9a100bea2965b858eb1853/themes.gitconfig"}";
+        delta = {
+          features = "chameleon";
+          navigate = true;
+          light = false;
+        };
+        merge.conflictstyle = "diff3";
+        diff.colorMoved = "default";
       };
     };
 
     jq.enable = true;
+    man.enable = true;
 
     kitty = {
       enable = true;
@@ -167,8 +183,6 @@ in
       };
     };
 
-    man.enable = true;
-    
     firefox = {
       profiles.holly = {
         settings = {
@@ -211,6 +225,7 @@ in
   xdg.configFile = {
     "nvim/init.vim".source = ./nvim/init.vim;
     "polybar/config".source = ./polybar;
+    "lsd/config.yaml".source = ./lsd.yaml;
   };
 
   xresources.properties = {

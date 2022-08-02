@@ -13,7 +13,8 @@ if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
 fi
 source ${PREZTO_DIR}/init.zsh
 
-unalias run-help
+
+#unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
@@ -40,6 +41,7 @@ alias jour="journalctl --user"
 alias vi="nvim"
 alias vim="nvim"
 alias python="nix-shell -p python3"
+alias ls="lsd"
 function nghci
 {
   set -x
