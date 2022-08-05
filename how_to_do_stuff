@@ -1,3 +1,17 @@
+That one time where you had bootloader flashed to a dev board but no led:
+  (I'm still not entirely convinced the LED hardware is broken but I have no better cause so...)
+
+  (You need to add $HOME/.cargo/bin)
+  DEFMT_LOG=info cargo run --bin bootloader
+
+  used screen /dev/ttyUSB0 to test any communication
+    (had to later $ lsof /dev/ttyUSB0
+      to see that screen was still running so I could $ kill -9 it
+    )
+  problink-repl: connect serial /dev/ttyUSB0 2000000
+                  ping
+
+
 That one time you borked the certs on research-mystique-5c.cert and .key files?
   Delete them from: 
     /root/internal-ca/pki/issued/
