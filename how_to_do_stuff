@@ -1,3 +1,38 @@
+Linux tools:
+
+rsync - like scp except there's a progress bar
+rsync -vap --ignore-existing <source> <destination>
+verbose, archive, progress bar
+
+lsof - list of open files
+netstat -- show network details like routing tables, connections, stats, flags
+nslookup - query DNS to find name server info!
+
+------
+
+git commands:
+Search for any phrase in commits or branches
+  git rev-list --all | xargs git grep -F ''
+  git rev-list --all | xargs git grep -F 'string to search for'
+Clean up local branches
+  git config --global fetch.prune true //auto-prune
+  git branch --merged master | grep -v "master" | xargs -n 1 git branch -d // delete local branches that have been merged with master
+count commits
+  git rev-list --count branch-name
+view file on another branch
+  git show aster:newfeature.py
+blank commit:
+  git commit --allow empty -m 'new empty commit'
+autocorrect:
+  git config --global help.autocorrect 1
+
+.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+
+dstat - show network and disk computer is using at any given time, auto refreshing
+oppensnoop -p $PID print out every file the program is opening at a time
+
+//
+
 That one time where you had bootloader flashed to a dev board but no led:
   (I'm still not entirely convinced the LED hardware is broken but I have no better cause so...)
 
@@ -10,7 +45,6 @@ That one time where you had bootloader flashed to a dev board but no led:
     )
   problink-repl: connect serial /dev/ttyUSB0 2000000
                   ping
-
 
 That one time you borked the certs on research-mystique-5c.cert and .key files?
   Delete them from: 
@@ -98,7 +132,6 @@ Ways to handle interface tests properly:
 = what happens if the client is writing and goes away
 = what if it takes time to respond
 
-
 - reapi for gambit-driver
   review workbooks that exist (nonverbal feedback)
     Do they have strange workarounds for things?
@@ -107,7 +140,6 @@ Ways to handle interface tests properly:
   Think about reducing it to a single command that can be sent without any parameters
     Remember that the gambit-config.yaml is part of the interface; think about what can be actually moved in there and used
   Write out on notion, go back and review. Think. Review. Write. Think. Write.
-
 
 ==================================================
 YOU WANT SOME GOOGLE SHEETS HOTKEYS?
@@ -155,9 +187,9 @@ find and replace in neovim!
 
 Want to do anything with USB connectivity?
   nix-shell -p usbutils
-  lsusb
+ lsusb //this is now rolled into home-manager config
 
-  platformio run --target upload -e SAMD51_grandcentral_m4
+  platformio run --target upload -e SAMD51_grandcentral_m4 //This is not long for this world
 
   You can just write to /dev/ttyACM0!
 
