@@ -20,6 +20,8 @@ in
     file = {
       ".xmonad/xmonad.hs".source = ./xmonad.hs;
       ".zshrc".source = ./zshrc;
+      "lsd/config.yaml".source = ./lsd.yaml;
+      ".tmux.conf".source = ./tmux.conf;
       ".zprofile".source = ./zprofile;
       ".config/polybar/cal_remind.sh" = {
         executable = true;
@@ -47,6 +49,7 @@ in
     };
 
     packages = with pkgs; [
+      nixos-option
       zsh-prezto
       neovim
       hexyl # command line hex viewer with pretty colours
@@ -90,6 +93,7 @@ in
       saleae-logic-2 
       hexedit # Wanna read a wall of hex?
       lsd
+      tmux
     ];
 
     sessionVariables = {
@@ -226,7 +230,6 @@ in
   xdg.configFile = {
     "nvim/init.vim".source = ./nvim/init.vim;
     "polybar/config".source = ./polybar;
-    "lsd/config.yaml".source = ./lsd.yaml;
   };
 
   xresources.properties = {

@@ -13,9 +13,8 @@ if [ ! -f ${ZDOTDIR:-$HOME}/.zpreztorc ] ; then
 fi
 source ${PREZTO_DIR}/init.zsh
 
-
 #unalias run-help
-autoload run-help
+#autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
 # module_path=($module_path /usr/local/lib/zpython)
