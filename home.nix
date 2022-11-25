@@ -94,6 +94,11 @@ in
       hexedit # Wanna read a wall of hex?
       lsd
       tmux
+      xxd
+      patchelf
+      gdb
+      openocd
+      foxitreader
     ];
 
     sessionVariables = {
@@ -139,6 +144,7 @@ in
     };
   };
 
+  manual.manpages.enable = false;
   programs = {
     home-manager.enable = true;
 

@@ -8,6 +8,10 @@ lsof - list of open files
 netstat -- show network details like routing tables, connections, stats, flags
 nslookup - query DNS to find name server info!
 
+AppImages: nix-shell -p appimage-run
+  And then you can extract from the .AppImage
+    Maybe even *not* run it!
+
 ------
 
 git commands:
@@ -73,6 +77,8 @@ How we debugged the JLink Probe:
 
   PART TWO:
     0) Set up udev on NixOs to stop having to run as sudo (which will break in different ways you do *not* want to deal with)
+      0.1) add the udev rules in text in /etx/nixos/configuration.nix within ( pkgs.writeFileText {})s
+      0.2) # udevadm control --reload
     1) RUST_LOG=probe_rs=trace probe-rs-cli info
       Gives detailed and pretty log info for debugging purposes
       In the case of (2) there's plenty of output that says NOACK, so no communication is happening even if the pipe is conntected
@@ -188,6 +194,7 @@ find and replace in neovim!
 Want to do anything with USB connectivity?
   nix-shell -p usbutils
  lsusb //this is now rolled into home-manager config
+  fun ability: lsusb -t for the device tree
 
   platformio run --target upload -e SAMD51_grandcentral_m4 //This is not long for this world
 
