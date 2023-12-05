@@ -1,3 +1,126 @@
+That one time you had finished merging develop into your feature branch
+  but also you commited on github to add something to remote
+  and then wound up in rebase hell for all eternity.
+   until you did this:
+    git remote update -p
+    git merge origin/BRANCH-NAME
+
+obtuse proto errors:
+  Go into shared-proto and
+    cargo build --features "std,prost"
+
+Change a commit message that's older than latest and pushed?
+  git rebase -i HEAD~n
+    Where `n` is the number of commits you want to go backwards through
+  Read the commands, they're more useful than just a rename, but to rename:
+    Replace `pick` with `reword` on the commit you want to change
+    And change the commit message with whatever you need to fix
+  git push --force origin BRANCH-NAME
+
+updating NIXOS and encountering a version collision:
+- you want your 'nixos' channel listed under root, and 'home-manager' listed under the user. 
+
+OWOW HOW TO DO A THING:
+
+HYDRA_SSH_IDENTITY=/home/holly/.ssh/id_hydra HYDRA_SSH_USER=hydra ./push.sh -i alpha-plus/mensa.nix -t ssh://mensa.vital.company -k ~/nix-keys/nugget.private.pem -a
+remember the identity... is... wait... did this work? Was this the one I actually used?
+
+Also, check out this monster log grep that Ross did:
+
+journalctl -u gambit-driver-hercules.service -S -3d | grep -B4 'AngelCommonResp.*VersionInfoResp' | perl -pe 's,^(Jun .. ..:..:..).*(Angel|Gambit)CommonResp.*VersionInfoResp[(]..([^\\]+).*,$1 $2 $3,'  | grep -v problink_over_fd | perl -e 'while (<>) { next if /--/; $gam = $_; chomp $gam; $ang = <>; chomp $ang; print("$gam $ang\n"); }'
+
+git log --stat 93af09dd..70d675ed -- .
+
+/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=
+
+Haskel things:
+  You can test building things by
+    nix-shell -A haskell
+  or
+    nix-shell -A unified
+
+  and then from devsw
+    cabal v2-build xavier-controller
+    cabal v2-build shared-proto
+    This is also a thing:
+    cabal v2-test xavier-database
+
+    You used that to test some test changes
+
+
+More vim things:
+  space gs to open current git status to easily open up files and go to the next merge conflict, for example
+  - for stage/unstage file/hunk/line level
+    You can use visual select mode for this!
+  = is diffs
+
+You can see when things were git stashed!
+ git stash list --date=local
+
+diff -c file1 file2 | nvim
+
+sudo probe-rs-cli dump --chip ATSAMD51J18A -- 0 4194304
+ xxd for looking at .bin or .hex or .elf files directly
+
+cargo objcopy -- -O binary out.bin
+  Or -0 hex out.hex
+  You can do ldd to see shared dependencies, and you can readelf to look at executable, if you need to change a shared dependency you can patchelf it
+
+how to look at journalctl and grep a specific unit and pattern match against cyclops or motor
+  journalctl -o short-iso-precise -S -24h -u cyclops-driver.service -g firmware.'(cyclops|motor)'
+
+Can create a "pipe" file using `mkfifo`
+can create a socket with nc
+can create a serial connection with soccat
+  Still working on the syntax for that
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To use a remote hydra build server so the following commands work:
+  You need to add the id_hydra key from 1Password to  ~/.ssh/
+  ssh-add ~/.ssh/id_hydra
+    chmod 600 ~/.ssh/id_hydra
+  this might not be needed:
+    ssh -i /home/holly/.ssh/id_hydra hydra@hydra-aarch64.vital.company
+  this certainly is:
+    sudo ssh -i ~/.ssh/id_hydra hydra@hydra-aarch64.vital.company
+  possibly also:
+  ssh -i /home/holly/.ssh/id_hydra hydra@hydra.vital.company
+  sudo ssh -i /home/holly/.ssh/id_hydra hydra@hydra.vital.company
+
+And then this will work:
+ nix build -f release.nix cyclops-driver.aarch64-linux --print-build-logs --verbose --builders 'ssh://hydra@hydra-aarch64.vital.company?ssh-key=/home/holly/.ssh/id_hydra aarch64-linux /home/holly/.ssh/id_hydra 8 1 kvm,big-parallel - -' 
+
+Also!
+  journalctl -r reverses log output
+    So you can journalctl -ru some-unit.service
+
+  A local call to build a specific build target for a specific environment using hyda directly and a specific build environment on hydra
+    Copies the dirivation results locally
+  sudo nix-build release.nix -A cyclops-driver.aarch64-linux --builders 'ssh://hydra@172.16.4.219 aarch64-linux - 8'
+
+    - this currently copies the binary and dependancies to the target
+        Currently there is a bug where this doesn't get signed
+    nix-copy-closure --to pi@192.168.86.89 $(readlink -f result)
+
+/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=
+
+List all connected devices:
+  udevadm info --export-db
+
+dump stdout to file: <some command> | tee <filename>
+include stderr: <some command> 2>&1
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+To build a faiing hydra build locally:
+
+nix build -f release.nix problink-repl.x86_64-linux
+  has to be done from devsw, can replace problink-repl with crate
+                                    and x86_64-linux with another platform
+
+Update submodules and give no room for missing anything
+  git submodule update --init --recursive --checkout --force
+
+
 Linux tools:
 
 rsync - like scp except there's a progress bar
@@ -74,6 +197,8 @@ How we debugged the JLink Probe:
     It keeps complaining about JTAG not selected, we want SWD so no problem
   The end resolution was to connect the pins on the 50-Mil 10-pin adapter board that I got because those pins aren't connected via traces.
   Failed to get information for AP ApAddress thing...
+
+  (SOMETIMES YOU NEED TO FORCE REINISTALL: cargo install probe-run --force; and then re-do step 0.2)
 
   PART TWO:
     0) Set up udev on NixOs to stop having to run as sudo (which will break in different ways you do *not* want to deal with)

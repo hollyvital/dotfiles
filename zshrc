@@ -4,6 +4,9 @@
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
+export HYDRA_SSH_IDENTITY="/home/holly/.ssh/id_ed25519"
+export HYDRA_SSH_USER="holly"
+export PATH="$PATH:$HOME/.cargo/bin"
 
 # Source Prezto.
 # Tacked the /share/zsh=prezto on the end since it wasn't checking for recursive directories
@@ -22,8 +25,7 @@ HELPDIR=/usr/local/share/zsh/help
 
 setopt NO_SHARE_HISTORY
 
-#prompt oliver
-prompt sorin
+prompt bigfade 
 
 bindkey '^r' history-incremental-search-backward
 
@@ -48,3 +50,4 @@ function nghci
 }
 
 [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ] && . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+#eval "$(direnv hook zsh)"

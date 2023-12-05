@@ -1,6 +1,17 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
+  inherit (builtins)
+    getFlake
+    toString;
+
+  mkOutOfStoreSymlink = path:
+    let
+      pathStr = toString path;
+      name = lib.hm.strings.storeFileName (baseNameOf pathStr);
+    in
+      pkgs.runCommandLocal name {} ''ln -s ${lib.escapeShellArg pathStr} $out'';  
+
   xmonad = pkgs.xmonad-with-packages.override {
     packages = p: with p; [ xmonad-contrib xmonad-extras ];
   };
@@ -18,11 +29,39 @@ in
     username = "holly";
     homeDirectory = "/home/holly";
     file = {
+      ".ssh/config".text = ''
+        Host nuc-3
+          Hostname nuc-3
+          User holly 
+
+        Host nuc-2
+          Hostname nuc-2
+          User holly 
+
+        Host musca 
+          Hostname musca.vital-dk
+          User holly
+          ProxyCommand ssh nuc-2 -W %h:%p
+
+        Host sagittarius
+          Hostname sagittarius.vital-dk
+          User holly
+          ProxyCommand ssh nuc-2 -W %h:%p
+
+        Host pavo 
+          Hostname pavo.vital-dk
+          User holly
+          ProxyCommand ssh nuc-3 -W %h:%p
+
+        Host perseus 
+          Hostname perseus.vital-dk
+          User holly
+          ProxyCommand ssh nuc-3 -W %h:%p
+
+      '';
+      ".zshrc".source = mkOutOfStoreSymlink ./zshrc;
+      ".zprofile".source = mkOutOfStoreSymlink ./zprofile;
       ".xmonad/xmonad.hs".source = ./xmonad.hs;
-      ".zshrc".source = ./zshrc;
-      "lsd/config.yaml".source = ./lsd.yaml;
-      ".tmux.conf".source = ./tmux.conf;
-      ".zprofile".source = ./zprofile;
       ".config/polybar/cal_remind.sh" = {
         executable = true;
         # if google refuses to authorize you may need a vital specific client_id. I can hook you up
@@ -50,30 +89,29 @@ in
 
     packages = with pkgs; [
       nixos-option
+      # pkg-config
+      # google-chrome
+      obsidian
       zsh-prezto
       neovim
-      hexyl # command line hex viewer with pretty colours
-      #google-chrome
       gnumake
       ctags
       glibc.dev
       firefox
-      ripgrep
       file
       slack
       zoom-us
+      remmina
       gotop
       binutils
       usbutils
       libftdi
       libusb
+      udev
       exa
       silver-searcher
       glxinfo 
-      sublime-merge #Cozy merge conflict gui
       vimpc
-      fd
-      fzf
       hicolor-icon-theme
       dunst
 #      (dunst.override { dunstify = true; })
@@ -82,23 +120,27 @@ in
       unzip
       virt-manager
       bmap-tools
-      screen
+      sublime-merge #merge conflict gui. It's meh.
+      screen #look into the tubes
       (import (builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/9ffd16b3850536094ca36bc31520bb15a6d5a9ef.tar.gz") {}).cachix
-      remmina
+      ripgrep #basically grep for me now
+      fzf #fuzzyfind, need it for... I dunno, something
       krita #Move over, Photoshop!
       kicad #Circuit board software
       vlc
       fd  #find but actually usable
       bat #cat with syntax highlighting
       saleae-logic-2 
+      hexyl # command line hex viewer with pretty colours
       hexedit # Wanna read a wall of hex?
-      lsd
-      tmux
+      lsd #neat icons for ls
+      tmux #remote terminal mux
       xxd
       patchelf
       gdb
       openocd
-      foxitreader
+      #direnv
+      tailscale
     ];
 
     sessionVariables = {
@@ -106,13 +148,23 @@ in
       VISUAL = "nvim";
       FZF_DEFAULT_COMMAND = "fd --type f";
       TERM = "xterm-256color";
+      HYDRA_SSH_IDENTITY="~/.ssh/id_ed25519";
+      HYDRA_SSH_USER="holly";
     };
 
     stateVersion = "21.05";
   };
 
   nixpkgs.config = import ./nixpkgs-config.nix;
-  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+
+  xdg.configFile = {
+    nvim.source = mkOutOfStoreSymlink ./nvim;
+    # "nvim/init.vim".source = ./nvim/init.vim;
+    "polybar/config".source = mkOutOfStoreSymlink ./polybar;
+    "lsd/config.yaml".source = mkOutOfStoreSymlink ./lsd.yaml;
+    "nixpkgs/config.nix".source = mkOutOfStoreSymlink ./nixpkgs-config.nix; 
+    ".tmux.conf".source = mkOutOfStoreSymlink ./tmux.conf;
+  };
 
   services = {
     mpd = {
@@ -148,6 +200,12 @@ in
   programs = {
     home-manager.enable = true;
 
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      enableZshIntegration = true;
+    };
+
     neovim = {
       viAlias = true;
       vimAlias = true;
@@ -177,6 +235,7 @@ in
 
     jq.enable = true;
     man.enable = true;
+    zsh.enable = true;
 
     kitty = {
       enable = true;
@@ -223,19 +282,13 @@ in
           "services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket" = false;
           "ui.systemUsesDarkTheme"= 1;
         };
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          onepassword-password-manager
+          ublock-origin
+          solarized-light
+        ];
       };
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-        onepassword-password-manager
-        ublock-origin
-        solarized-light
-      ];
     };
-  };
-
-
-  xdg.configFile = {
-    "nvim/init.vim".source = ./nvim/init.vim;
-    "polybar/config".source = ./polybar;
   };
 
   xresources.properties = {
@@ -294,7 +347,6 @@ in
 
   xsession = {
     enable = true;
-
     windowManager.command = "${xmonad}/bin/xmonad";
   };
 }

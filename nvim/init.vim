@@ -44,6 +44,9 @@ set wildmode=list:longest,full " Configure wildmenu
 set clipboard=unnamedplus
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
+
+"Uuuuuugh I'm so over dein
+
 "This add is also called further down so I shouldn't need this
 "call dein#add('Shougo/denite.nvim')
 if !has('nvim')
@@ -60,14 +63,18 @@ if dein#load_state('~/.cache/dein')
   call dein#add('lsdr/monokai')
   call dein#add('kergoth/vim-hilinks')
 
+  " UI support
+  call dein#add('rcarriga/nvim-notify')
+
   " Syntaxes
-  call dein#add('1995parham/vim-spice')
-  call dein#add('Dridus/nc.vim')
-  call dein#add('elzr/vim-json')
-  call dein#add('hashivim/vim-terraform')
-  call dein#add('LnL7/vim-nix')
-  call dein#add('neovimhaskell/haskell-vim')
-  call dein#add('rust-lang/rust.vim')
+  call dein#add('nvim-treesitter/nvim-treesitter')
+  " call dein#add('1995parham/vim-spice')
+  " call dein#add('Dridus/nc.vim')
+  " call dein#add('elzr/vim-json')
+  " call dein#add('hashivim/vim-terraform')
+  " call dein#add('LnL7/vim-nix')
+  " call dein#add('neovimhaskell/haskell-vim')
+  " call dein#add('rust-lang/rust.vim')
 
   " SCM
   call dein#add('tpope/vim-fugitive') " A git wrapper so awesome, it should be illegal
@@ -82,6 +89,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('vim-scripts/gitignore') " Read .gitignore files into wildignore
 
   " Text manipulation
+  call dein#add('neovim/nvim-lspconfig')
+  call dein#add('tamago324/nlsp-settings.nvim')
   call dein#add('michaeljsmith/vim-indent-object') " Indented blocks as text objects
   call dein#add('tpope/vim-commentary') " Add/remove comments
   call dein#add('tpope/vim-repeat') " Support . with plugins
@@ -89,9 +98,14 @@ if dein#load_state('~/.cache/dein')
   call dein#add('vim-scripts/Align') " Second best thing ever?
 
   " UI
-  call dein#add('vim-airline/vim-airline') " Good status bars
-  call dein#add('vim-airline/vim-airline-themes') " Good status bars, with colors
-  call dein#add('simnalamburt/vim-mundo') " Undo tree browser
+  call dein#add('kyazdan42/nvim-web-devicons')
+  call dein#add('onsails/lspkind-nvim')
+  call dein#add('nvim-lualine/lualine.nvim')
+  call dein#add('akinsho/bufferline.nvim')
+  call dein#add('stevearc/dressing.nvim')
+  " call dein#add('vim-airline/vim-airline') " Good status bars
+  " call dein#add('vim-airline/vim-airline-themes') " Good status bars, with colors
+  " call dein#add('simnalamburt/vim-mundo') " Undo tree browser
 
   call dein#end()
   call dein#save_state()
@@ -105,6 +119,11 @@ let g:airline_solarized_bg='dark'
 " Alignment
 "
 let g:loaded_AlignMapsPlugin = 1
+
+augroup resize_windows
+  autocmd!
+  autocmd VimResized * execute "normal! \<C-w>="
+augroup END
 
 " Haskell
 "
